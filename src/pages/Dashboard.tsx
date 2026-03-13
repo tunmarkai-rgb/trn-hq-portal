@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Handshake, Building2, Users, TrendingUp } from "lucide-react";
+import { Handshake, Building2, Users, TrendingUp, ArrowUpRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -27,49 +28,63 @@ const Dashboard = () => {
   }, [user]);
 
   const cards = [
-    { icon: Building2, label: "Total Deals", value: stats.deals, color: "text-blue-400" },
-    { icon: TrendingUp, label: "Active Deals", value: stats.activeDeals, color: "text-green-400" },
-    { icon: Handshake, label: "Referrals", value: stats.referrals, color: "text-gold" },
+    { icon: Building2, label: "Total Deals", value: stats.deals, accent: "from-blue-500/20 to-blue-600/5" },
+    { icon: TrendingUp, label: "Active Deals", value: stats.activeDeals, accent: "from-emerald-500/20 to-emerald-600/5" },
+    { icon: Handshake, label: "Referrals", value: stats.referrals, accent: "from-gold/20 to-gold/5" },
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="font-display text-2xl font-bold text-[hsl(220,15%,90%)]">
+    <div className="space-y-8 max-w-5xl">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        <h2 className="font-display text-2xl font-bold text-[hsl(220,15%,92%)]">
           Welcome back{stats.profile?.full_name ? `, ${stats.profile.full_name}` : ""}
         </h2>
         <p className="font-body text-[hsl(220,10%,50%)] mt-1">Here's your network overview.</p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {cards.map((card) => (
-          <div key={card.label} className="bg-[hsl(220,25%,10%)] border border-[hsl(220,20%,18%)] rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-body text-sm text-[hsl(220,10%,50%)]">{card.label}</span>
-              <card.icon className={`w-5 h-5 ${card.color}`} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {cards.map((card, i) => (
+          <motion.div
+            key={card.label}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="bg-[hsl(220,25%,9%)] border border-gold/8 rounded-2xl p-6 hover:border-gold/15 transition-all duration-300 group"
+          >
+            <div className="flex items-center justify-between mb-5">
+              <span className="font-body text-xs text-[hsl(220,10%,50%)] uppercase tracking-wider">{card.label}</span>
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.accent} flex items-center justify-center`}>
+                <card.icon className="w-5 h-5 text-gold" />
+              </div>
             </div>
-            <p className="font-display text-3xl font-bold text-[hsl(220,15%,90%)]">{card.value}</p>
-          </div>
+            <p className="font-display text-4xl font-bold text-[hsl(220,15%,92%)]">{card.value}</p>
+          </motion.div>
         ))}
       </div>
 
-      <div className="bg-[hsl(220,25%,10%)] border border-[hsl(220,20%,18%)] rounded-xl p-6">
-        <h3 className="font-display text-lg font-semibold text-[hsl(220,15%,85%)] mb-3">Getting Started</h3>
-        <ul className="space-y-3 font-body text-sm text-[hsl(220,10%,55%)]">
-          <li className="flex items-start gap-2">
-            <Users className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-            <span>Browse the <strong className="text-[hsl(220,15%,75%)]">Directory</strong> to find agents in your target markets</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Handshake className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-            <span>Send a <strong className="text-[hsl(220,15%,75%)]">Referral</strong> when you have a client for another market</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Building2 className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-            <span>Track your <strong className="text-[hsl(220,15%,75%)]">Deals</strong> privately with your partners</span>
-          </li>
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="bg-[hsl(220,25%,9%)] border border-gold/8 rounded-2xl p-8"
+      >
+        <h3 className="font-display text-lg font-semibold text-[hsl(220,15%,88%)] mb-5">Getting Started</h3>
+        <ul className="space-y-4 font-body text-sm text-[hsl(220,10%,55%)]">
+          {[
+            { icon: Users, text: "Browse the Directory to find agents in your target markets", label: "Directory" },
+            { icon: Handshake, text: "Send a Referral when you have a client for another market", label: "Referrals" },
+            { icon: Building2, text: "Track your Deals privately with your partners", label: "Deals" },
+          ].map((item) => (
+            <li key={item.label} className="flex items-start gap-3 p-3 rounded-xl hover:bg-[hsl(220,25%,11%)] transition-colors group cursor-default">
+              <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0 mt-0.5">
+                <item.icon className="w-4 h-4 text-gold" />
+              </div>
+              <span className="flex-1">{item.text}</span>
+              <ArrowUpRight className="w-4 h-4 text-gold/0 group-hover:text-gold/50 transition-all shrink-0 mt-1" />
+            </li>
+          ))}
         </ul>
-      </div>
+      </motion.div>
     </div>
   );
 };

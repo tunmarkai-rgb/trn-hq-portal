@@ -25,23 +25,24 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-24 md:py-32 bg-navy relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-      
+    <section id="how-it-works" className="py-24 md:py-32 bg-navy relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+
       <div className="container px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="font-body text-sm text-gold uppercase tracking-widest mb-4 block">The Process</span>
+          <span className="font-body text-xs text-gold uppercase tracking-[0.4em] mb-6 block">The Process</span>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-[hsl(220,15%,90%)]">
-            How It <span className="text-gold">Works</span>
+            How It <span className="text-gold italic">Works</span>
           </h2>
+          <div className="w-16 h-[1px] bg-gold/40 mx-auto mt-6" />
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto">
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
@@ -49,22 +50,18 @@ const HowItWorksSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.12, duration: 0.5 }}
-              className="relative"
+              className="relative text-center"
             >
-              <span className="font-display text-6xl font-bold text-gold/10 absolute -top-4 -left-2">{step.number}</span>
-              <div className="relative pt-8">
-                <h3 className="font-display text-xl font-semibold text-[hsl(220,15%,85%)] mb-3">{step.title}</h3>
-                <p className="font-body text-sm text-[hsl(220,10%,50%)] leading-relaxed">{step.description}</p>
-              </div>
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 -right-4 w-8 h-px bg-gold/20" />
-              )}
+              <span className="font-display text-7xl font-bold text-gold/8 block mb-4">{step.number}</span>
+              <div className="w-8 h-[1px] bg-gold/30 mx-auto mb-4" />
+              <h3 className="font-display text-lg font-semibold text-[hsl(220,15%,88%)] mb-3">{step.title}</h3>
+              <p className="font-body text-sm text-[hsl(220,10%,50%)] leading-relaxed">{step.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
     </section>
   );
 };
