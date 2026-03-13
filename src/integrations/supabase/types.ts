@@ -14,16 +14,192 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      deals: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          created_by: string
+          deal_type: string | null
+          estimated_value: number | null
+          id: string
+          notes: string | null
+          partner_id: string | null
+          property_address: string | null
+          referral_fee_percent: number | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          created_by: string
+          deal_type?: string | null
+          estimated_value?: number | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          property_address?: string | null
+          referral_fee_percent?: number | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string
+          deal_type?: string | null
+          estimated_value?: number | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          property_address?: string | null
+          referral_fee_percent?: number | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          agency: string | null
+          avatar_url: string | null
+          can_help_with: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          instagram: string | null
+          languages: string[] | null
+          looking_for: string | null
+          niche: string[] | null
+          role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agency?: string | null
+          avatar_url?: string | null
+          can_help_with?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          instagram?: string | null
+          languages?: string[] | null
+          looking_for?: string | null
+          niche?: string[] | null
+          role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agency?: string | null
+          avatar_url?: string | null
+          can_help_with?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          instagram?: string | null
+          languages?: string[] | null
+          looking_for?: string | null
+          niche?: string[] | null
+          role?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          client_contact: string | null
+          client_name: string
+          created_at: string
+          id: string
+          location: string | null
+          notes: string | null
+          property_type: string | null
+          referral_fee_percent: number | null
+          sent_by: string
+          sent_to: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_contact?: string | null
+          client_name: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          property_type?: string | null
+          referral_fee_percent?: number | null
+          sent_by: string
+          sent_to?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_contact?: string | null
+          client_name?: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          property_type?: string | null
+          referral_fee_percent?: number | null
+          sent_by?: string
+          sent_to?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "member"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +326,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "member"],
+    },
   },
 } as const
