@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          pinned: boolean
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          title?: string
+        }
+        Relationships: []
+      }
+      community_links: {
+        Row: {
+          channel_type: string
+          created_at: string
+          description: string | null
+          id: string
+          label: string
+          url: string
+        }
+        Insert: {
+          channel_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label: string
+          url: string
+        }
+        Update: {
+          channel_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label?: string
+          url?: string
+        }
+        Relationships: []
+      }
       deals: {
         Row: {
           city: string | null
@@ -65,6 +116,75 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_date: string
+          event_type: string
+          id: string
+          join_link: string | null
+          recording_url: string | null
+          speaker: string | null
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_date: string
+          event_type?: string
+          id?: string
+          join_link?: string | null
+          recording_url?: string | null
+          speaker?: string | null
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          event_type?: string
+          id?: string
+          join_link?: string | null
+          recording_url?: string | null
+          speaker?: string | null
+          summary?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      knowledge_resources: {
+        Row: {
+          author: string | null
+          category: string
+          content: string | null
+          created_at: string
+          id: string
+          link: string | null
+          title: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          title: string
+        }
+        Update: {
+          author?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           agency: string | null
@@ -78,6 +198,8 @@ export type Database = {
           id: string
           instagram: string | null
           languages: string[] | null
+          latitude: number | null
+          longitude: number | null
           looking_for: string | null
           niche: string[] | null
           role: string | null
@@ -96,6 +218,8 @@ export type Database = {
           id?: string
           instagram?: string | null
           languages?: string[] | null
+          latitude?: number | null
+          longitude?: number | null
           looking_for?: string | null
           niche?: string[] | null
           role?: string | null
@@ -114,11 +238,46 @@ export type Database = {
           id?: string
           instagram?: string | null
           languages?: string[] | null
+          latitude?: number | null
+          longitude?: number | null
           looking_for?: string | null
           niche?: string[] | null
           role?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      referral_opportunities: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          market_city: string | null
+          market_country: string | null
+          opportunity_type: string
+          posted_by: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          market_city?: string | null
+          market_country?: string | null
+          opportunity_type?: string
+          posted_by: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          market_city?: string | null
+          market_country?: string | null
+          opportunity_type?: string
+          posted_by?: string
+          title?: string
         }
         Relationships: []
       }
