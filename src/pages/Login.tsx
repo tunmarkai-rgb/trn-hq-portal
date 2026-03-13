@@ -8,7 +8,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import trnLogo from "@/assets/trn-logo.png";
-import heroBg from "@/assets/hero-bg.jpeg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -53,17 +52,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-navy flex relative overflow-hidden">
-      {/* Left side - world map background */}
-      <div className="hidden lg:flex flex-1 relative items-center justify-center">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url(${heroBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-navy/60" />
+      {/* Left side */}
+      <div className="hidden lg:flex flex-1 relative items-center justify-center bg-[hsl(220,25%,8%)]">
         <div className="relative z-10 text-center px-12">
           <img src={trnLogo} alt="TRN" className="h-20 w-20 object-contain mx-auto mb-8 opacity-90" />
           <h2 className="font-display text-4xl font-bold text-[hsl(220,15%,92%)] mb-4 leading-tight">
