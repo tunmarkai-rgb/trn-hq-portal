@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import trnLogo from "@/assets/trn-logo.png";
+import loginBg from "@/assets/login-bg.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -51,20 +52,29 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-navy flex relative overflow-hidden">
-      {/* Left side — logo only */}
-      <div className="hidden lg:flex flex-1 relative items-center justify-center bg-navy">
+    <div className="min-h-screen flex relative overflow-hidden">
+      {/* Left side — premium property background with logo */}
+      <div className="hidden lg:flex flex-1 relative items-center justify-center">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${loginBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
-          <img src={trnLogo} alt="TRN" className="h-32 w-32 object-contain opacity-80" />
+          <img src={trnLogo} alt="The Realty Network" className="h-44 w-44 object-contain drop-shadow-2xl" />
         </div>
       </div>
 
       {/* Right side — login form */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:px-16 lg:max-w-lg">
+      <div className="flex-1 flex items-center justify-center px-6 lg:px-16 lg:max-w-lg bg-navy">
         <div className="w-full max-w-md">
           <div className="text-center mb-10 lg:text-left">
             <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-              <img src={trnLogo} alt="TRN" className="h-10 w-10 object-contain lg:hidden" />
+              <img src={trnLogo} alt="TRN" className="h-12 w-12 object-contain lg:hidden" />
               <div>
                 <h1 className="font-display text-2xl font-bold text-[hsl(220,15%,92%)] tracking-wide">
                   Member HQ
