@@ -12,12 +12,20 @@ import Dashboard from "./pages/Dashboard";
 import Directory from "./pages/Directory";
 import Deals from "./pages/Deals";
 import Referrals from "./pages/Referrals";
-import Calendar from "./pages/Calendar";
+import Events from "./pages/Events";
 import Resources from "./pages/Resources";
 import Profile from "./pages/Profile";
+import GlobalMap from "./pages/GlobalMap";
+import Opportunities from "./pages/Opportunities";
+import Knowledge from "./pages/Knowledge";
+import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const DashboardRoute = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute><DashboardLayout>{children}</DashboardLayout></ProtectedRoute>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -29,14 +37,18 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/directory" element={<ProtectedRoute><DashboardLayout><Directory /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/deals" element={<ProtectedRoute><DashboardLayout><Deals /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/calendar" element={<ProtectedRoute><DashboardLayout><Calendar /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/resources" element={<ProtectedRoute><DashboardLayout><Resources /></DashboardLayout></ProtectedRoute>} />
-            <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><Profile /></DashboardLayout></ProtectedRoute>} />
+            <Route path="/" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+            <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+            <Route path="/dashboard/directory" element={<DashboardRoute><Directory /></DashboardRoute>} />
+            <Route path="/dashboard/map" element={<DashboardRoute><GlobalMap /></DashboardRoute>} />
+            <Route path="/dashboard/opportunities" element={<DashboardRoute><Opportunities /></DashboardRoute>} />
+            <Route path="/dashboard/deals" element={<DashboardRoute><Deals /></DashboardRoute>} />
+            <Route path="/dashboard/referrals" element={<DashboardRoute><Referrals /></DashboardRoute>} />
+            <Route path="/dashboard/events" element={<DashboardRoute><Events /></DashboardRoute>} />
+            <Route path="/dashboard/knowledge" element={<DashboardRoute><Knowledge /></DashboardRoute>} />
+            <Route path="/dashboard/community" element={<DashboardRoute><Community /></DashboardRoute>} />
+            <Route path="/dashboard/resources" element={<DashboardRoute><Resources /></DashboardRoute>} />
+            <Route path="/dashboard/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
