@@ -51,100 +51,93 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-navy flex relative overflow-hidden">
-      {/* Left side */}
-      <div className="hidden lg:flex flex-1 relative items-center justify-center bg-[hsl(220,25%,8%)]">
-        <div className="relative z-10 text-center px-12">
-          <img src={trnLogo} alt="TRN" className="h-20 w-20 object-contain mx-auto mb-8 opacity-90" />
-          <h2 className="font-display text-4xl font-bold text-[hsl(220,15%,92%)] mb-4 leading-tight">
-            Real Estate Is Global.
-          </h2>
-          <h2 className="font-display text-4xl font-bold text-gold mb-6 leading-tight italic">
-            Your Network Should Be Too.
-          </h2>
-          <div className="w-16 h-[1px] bg-gold/40 mx-auto mb-6" />
-          <p className="font-body text-[hsl(220,10%,50%)] max-w-sm mx-auto">
-            The global referral and collaboration network for real estate professionals.
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-navy flex items-center justify-center relative overflow-hidden px-4">
+      {/* Subtle background pattern — low-opacity grid */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(hsl(var(--gold) / 0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--gold) / 0.6) 1px, transparent 1px)`,
+          backgroundSize: "80px 80px",
+        }}
+      />
+      {/* Subtle radial glow behind form */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/[0.03] blur-[120px]" />
 
-      {/* Right side - login form */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:px-16 lg:max-w-lg">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-10 lg:text-left">
-            <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-              <img src={trnLogo} alt="TRN" className="h-10 w-10 object-contain lg:hidden" />
-              <div>
-                <h1 className="font-display text-2xl font-bold text-[hsl(220,15%,92%)] tracking-wide">
-                  Member HQ
-                </h1>
-              </div>
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo & brand */}
+        <div className="text-center mb-10">
+          <img src={trnLogo} alt="The Realty Network" className="h-16 w-16 object-contain mx-auto mb-5 opacity-90" />
+          <h1 className="font-display text-3xl font-bold text-[hsl(220,15%,92%)] tracking-wide mb-1">
+            The Realty Network
+          </h1>
+          <p className="font-body text-sm text-[hsl(220,10%,50%)]">Member Headquarters</p>
+        </div>
+
+        {/* Form card */}
+        <div className="bg-[hsl(220,25%,9%)] border border-gold/10 rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+          <h2 className="font-display text-xl font-semibold text-[hsl(220,15%,88%)] mb-6">
+            {isForgotPassword ? "Reset Password" : "Sign In"}
+          </h2>
+
+          <form onSubmit={isForgotPassword ? handleForgotPassword : handleLogin} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="font-body text-xs text-[hsl(220,10%,55%)] uppercase tracking-wider">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-[hsl(220,25%,7%)] border-[hsl(220,20%,16%)] text-[hsl(220,15%,85%)] font-body h-12 rounded-lg focus:border-gold/40 focus:ring-gold/20"
+                placeholder="you@example.com"
+              />
             </div>
-            <p className="font-body text-sm text-[hsl(220,10%,50%)]">Sign in to access your network</p>
-          </div>
 
-          <div className="bg-[hsl(220,25%,9%)] border border-gold/10 rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-            <form onSubmit={isForgotPassword ? handleForgotPassword : handleLogin} className="space-y-5">
+            {!isForgotPassword && (
               <div className="space-y-2">
-                <Label htmlFor="email" className="font-body text-xs text-[hsl(220,10%,55%)] uppercase tracking-wider">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-[hsl(220,25%,7%)] border-[hsl(220,20%,16%)] text-[hsl(220,15%,85%)] font-body h-12 rounded-lg focus:border-gold/40 focus:ring-gold/20"
-                  placeholder="you@example.com"
-                />
-              </div>
-
-              {!isForgotPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="font-body text-xs text-[hsl(220,10%,55%)] uppercase tracking-wider">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-[hsl(220,25%,7%)] border-[hsl(220,20%,16%)] text-[hsl(220,15%,85%)] font-body pr-10 h-12 rounded-lg focus:border-gold/40 focus:ring-gold/20"
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[hsl(220,10%,40%)] hover:text-gold transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
+                <Label htmlFor="password" className="font-body text-xs text-[hsl(220,10%,55%)] uppercase tracking-wider">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="bg-[hsl(220,25%,7%)] border-[hsl(220,20%,16%)] text-[hsl(220,15%,85%)] font-body pr-10 h-12 rounded-lg focus:border-gold/40 focus:ring-gold/20"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[hsl(220,10%,40%)] hover:text-gold transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
-              )}
+              </div>
+            )}
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gold hover:bg-gold-dark text-navy font-body font-semibold h-12 rounded-lg text-base transition-all hover:shadow-[0_0_30px_hsl(var(--gold)/0.2)]"
-              >
-                {isLoading ? "Please wait..." : isForgotPassword ? "Send Reset Link" : "Sign In"}
-                {!isLoading && <ArrowRight className="ml-2 w-4 h-4" />}
-              </Button>
-            </form>
-
-            <button
-              onClick={() => setIsForgotPassword(!isForgotPassword)}
-              className="mt-5 text-sm font-body text-[hsl(220,10%,45%)] hover:text-gold transition-colors w-full text-center"
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gold hover:bg-gold-dark text-navy font-body font-semibold h-12 rounded-lg text-base transition-all hover:shadow-[0_0_30px_hsl(var(--gold)/0.2)]"
             >
-              {isForgotPassword ? "Back to sign in" : "Forgot password?"}
-            </button>
-          </div>
+              {isLoading ? "Please wait..." : isForgotPassword ? "Send Reset Link" : "Sign In"}
+              {!isLoading && <ArrowRight className="ml-2 w-4 h-4" />}
+            </Button>
+          </form>
 
-          <p className="text-center mt-8 font-body text-xs text-[hsl(220,10%,30%)] tracking-wide">
-            Invite-only access · Contact your admin for an invitation
-          </p>
+          <button
+            onClick={() => setIsForgotPassword(!isForgotPassword)}
+            className="mt-5 text-sm font-body text-[hsl(220,10%,45%)] hover:text-gold transition-colors w-full text-center"
+          >
+            {isForgotPassword ? "Back to sign in" : "Forgot password?"}
+          </button>
         </div>
+
+        <p className="text-center mt-8 font-body text-xs text-[hsl(220,10%,30%)] tracking-wide">
+          Invite-only access · Contact your admin for an invitation
+        </p>
       </div>
     </div>
   );
