@@ -1,14 +1,20 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import heroBg from "@/assets/hero-bg.jpeg";
 
 const CTASection = () => {
   return (
-    <section className="py-24 md:py-32 bg-navy relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `radial-gradient(circle at 50% 50%, hsl(var(--gold)) 1px, transparent 1px)`,
-        backgroundSize: '40px 40px'
-      }} />
+    <section className="py-28 md:py-36 relative overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-15"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <div className="absolute inset-0 bg-navy/80" />
 
       <div className="container px-6 relative z-10">
         <motion.div
@@ -17,17 +23,19 @@ const CTASection = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto text-center"
         >
-          <h2 className="font-display text-4xl md:text-6xl font-bold text-[hsl(220,15%,90%)] mb-6">
-            Ready to Go <span className="text-gold">Global?</span>
+          <span className="font-body text-xs text-gold uppercase tracking-[0.4em] mb-6 block">Take The Next Step</span>
+          <h2 className="font-display text-4xl md:text-6xl font-bold text-[hsl(220,15%,92%)] mb-4 leading-tight">
+            Ready to Go <span className="text-gold italic">Global?</span>
           </h2>
-          <p className="font-body text-lg text-[hsl(220,10%,50%)] mb-10 max-w-xl mx-auto">
-            Your next big commission might come from an agent in Dubai, London, or Miami. 
+          <div className="w-20 h-[1px] bg-gold/50 mx-auto mb-6" />
+          <p className="font-body text-lg text-[hsl(220,10%,55%)] mb-12 max-w-xl mx-auto leading-relaxed">
+            Your next big commission might come from an agent in Dubai, London, or Miami.
             The right connection is worth more than any marketing budget.
           </p>
 
           <Button
             size="lg"
-            className="bg-gold hover:bg-gold-dark text-navy font-body font-semibold px-10 py-6 text-lg rounded-lg transition-all hover:shadow-[0_0_40px_hsl(var(--gold)/0.3)]"
+            className="bg-gold hover:bg-gold-dark text-navy font-body font-semibold px-12 py-7 text-lg rounded-lg transition-all hover:shadow-[0_0_50px_hsl(var(--gold)/0.3)]"
             asChild
           >
             <a href="https://the-realty-network.circle.so/join?invitation_token=773b1957a12cdf5285c06327abca343cdcd3fd04-f9c234b8-0582-4b4f-abf1-ab8087dc5f0a" target="_blank" rel="noopener noreferrer">
@@ -35,8 +43,8 @@ const CTASection = () => {
             </a>
           </Button>
 
-          <p className="font-body text-sm text-[hsl(220,10%,40%)] mt-6">
-            Free to join • Engage to earn referrals • Zero tolerance for bad actors
+          <p className="font-body text-sm text-[hsl(220,10%,40%)] mt-8 tracking-wide">
+            Free to join · Engage to earn referrals · Zero tolerance for bad actors
           </p>
         </motion.div>
       </div>

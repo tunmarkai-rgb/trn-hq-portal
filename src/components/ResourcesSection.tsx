@@ -18,12 +18,13 @@ const ResourcesSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="font-body text-sm text-gold uppercase tracking-widest mb-4 block">Resources</span>
+          <span className="font-body text-xs text-gold uppercase tracking-[0.4em] mb-6 block">Resources</span>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
-            Training & <span className="text-gold">Resources</span>
+            Training & <span className="text-gold italic">Resources</span>
           </h2>
+          <div className="w-16 h-[1px] bg-gold/40 mx-auto mt-6" />
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -34,12 +35,14 @@ const ResourcesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.4 }}
-              className="flex gap-4 p-6 rounded-xl border border-border bg-card hover:border-gold/20 transition-all"
+              className="flex gap-4 p-7 rounded-2xl border border-border bg-card hover:border-gold/20 transition-all duration-300 hover:shadow-[0_8px_40px_hsl(var(--gold)/0.05)]"
             >
-              <resource.icon className="w-5 h-5 text-gold shrink-0 mt-1" />
+              <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
+                <resource.icon className="w-5 h-5 text-gold" />
+              </div>
               <div>
-                <h3 className="font-display text-base font-semibold text-foreground mb-1">{resource.title}</h3>
-                <p className="font-body text-sm text-muted-foreground">{resource.description}</p>
+                <h3 className="font-display text-base font-semibold text-foreground mb-2">{resource.title}</h3>
+                <p className="font-body text-sm text-muted-foreground leading-relaxed">{resource.description}</p>
               </div>
             </motion.div>
           ))}
