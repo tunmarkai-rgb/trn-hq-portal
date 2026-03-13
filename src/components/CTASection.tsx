@@ -1,20 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpeg";
 
 const CTASection = () => {
   return (
-    <section className="py-28 md:py-36 relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-15"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="absolute inset-0 bg-navy/80" />
+    <section className="py-28 md:py-36 relative overflow-hidden bg-navy">
 
       <div className="container px-6 relative z-10">
         <motion.div
