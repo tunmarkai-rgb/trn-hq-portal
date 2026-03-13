@@ -1,23 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpeg";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy">
-      {/* World map background */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy" />
-
-      {/* Gold accent lines */}
+      {/* Gold accent line */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent" />
 
       <div className="container relative z-10 px-6 py-20 md:py-32">
