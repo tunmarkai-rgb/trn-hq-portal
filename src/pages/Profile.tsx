@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -66,37 +68,49 @@ const Profile = () => {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Profile updated!" });
+      toast({ title: "Profile updated" });
     }
     setSaving(false);
   };
 
-  if (loading) return <div className="text-center py-12 font-body text-[hsl(220,10%,50%)]">Loading...</div>;
+  if (loading) return <div className="text-center py-12 font-body text-muted-foreground">Loading...</div>;
 
-  const fieldClass = "bg-[hsl(220,25%,7%)] border-[hsl(220,20%,18%)] text-[hsl(220,15%,85%)] font-body";
-  const labelClass = "font-body text-[hsl(220,10%,55%)]";
+  const completedFields = [form.full_name, form.city, form.country, form.agency, form.can_help_with, form.looking_for, form.niche].filter(Boolean).length;
+  const totalFields = 7;
+  const completion = Math.round((completedFields / totalFields) * 100);
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h2 className="font-display text-2xl font-bold text-[hsl(220,15%,90%)]">Your Profile</h2>
-        <p className="font-body text-sm text-[hsl(220,10%,50%)]">Complete your profile to get discovered by other members</p>
+        <h2 className="font-display text-2xl font-bold text-foreground">Your Profile</h2>
+        <p className="font-body text-sm text-muted-foreground">A strong profile attracts more introductions and referrals</p>
       </div>
 
-      <form onSubmit={handleSave} className="bg-[hsl(220,25%,10%)] border border-[hsl(220,20%,18%)] rounded-xl p-6 space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><Label className={labelClass}>Full Name</Label><Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className={fieldClass} /></div>
-          <div><Label className={labelClass}>Role</Label><Input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className={fieldClass} placeholder="Agent, Broker, Investor..." /></div>
-          <div><Label className={labelClass}>City</Label><Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className={fieldClass} /></div>
-          <div><Label className={labelClass}>Country</Label><Input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className={fieldClass} /></div>
-          <div><Label className={labelClass}>Agency / Company</Label><Input value={form.agency} onChange={(e) => setForm({ ...form, agency: e.target.value })} className={fieldClass} /></div>
-          <div><Label className={labelClass}>Instagram</Label><Input value={form.instagram} onChange={(e) => setForm({ ...form, instagram: e.target.value })} className={fieldClass} placeholder="@handle" /></div>
+      {/* Completion indicator */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-xl p-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-body text-xs text-muted-foreground">Profile completeness</span>
+          <span className={`font-body text-xs font-medium ${completion === 100 ? "text-emerald-400" : "text-gold"}`}>{completion}%</span>
         </div>
-        <div><Label className={labelClass}>Niches (comma-separated)</Label><Input value={form.niche} onChange={(e) => setForm({ ...form, niche: e.target.value })} className={fieldClass} placeholder="Sales, Luxury, Rentals, Commercial..." /></div>
-        <div><Label className={labelClass}>Languages (comma-separated)</Label><Input value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} className={fieldClass} placeholder="English, Spanish, French..." /></div>
-        <div><Label className={labelClass}>Can Help With</Label><Input value={form.can_help_with} onChange={(e) => setForm({ ...form, can_help_with: e.target.value })} className={fieldClass} placeholder="What you can offer other members..." /></div>
-        <div><Label className={labelClass}>Looking For</Label><Input value={form.looking_for} onChange={(e) => setForm({ ...form, looking_for: e.target.value })} className={fieldClass} placeholder="What kind of connections or opportunities..." /></div>
-        <Button type="submit" disabled={saving} className="w-full bg-gold hover:bg-gold-dark text-navy font-body font-semibold">
+        <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+          <div className="h-full bg-gold rounded-full transition-all duration-500" style={{ width: `${completion}%` }} />
+        </div>
+      </motion.div>
+
+      <form onSubmit={handleSave} className="bg-card border border-border rounded-xl p-6 space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><Label className="font-body text-xs text-muted-foreground">Full Name *</Label><Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="bg-background border-border text-foreground font-body" /></div>
+          <div><Label className="font-body text-xs text-muted-foreground">Role</Label><Input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="Agent, Broker, Investor..." /></div>
+          <div><Label className="font-body text-xs text-muted-foreground">City *</Label><Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="bg-background border-border text-foreground font-body" /></div>
+          <div><Label className="font-body text-xs text-muted-foreground">Country *</Label><Input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="bg-background border-border text-foreground font-body" /></div>
+          <div><Label className="font-body text-xs text-muted-foreground">Agency / Company *</Label><Input value={form.agency} onChange={(e) => setForm({ ...form, agency: e.target.value })} className="bg-background border-border text-foreground font-body" /></div>
+          <div><Label className="font-body text-xs text-muted-foreground">Instagram</Label><Input value={form.instagram} onChange={(e) => setForm({ ...form, instagram: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="@handle" /></div>
+        </div>
+        <div><Label className="font-body text-xs text-muted-foreground">Deal types / Specialties *</Label><Input value={form.niche} onChange={(e) => setForm({ ...form, niche: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="Luxury Sales, Commercial, Investment, Development..." /></div>
+        <div><Label className="font-body text-xs text-muted-foreground">Languages</Label><Input value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="English, Spanish, French..." /></div>
+        <div><Label className="font-body text-xs text-muted-foreground">What can you help other members with? *</Label><Textarea value={form.can_help_with} onChange={(e) => setForm({ ...form, can_help_with: e.target.value })} className="bg-background border-border text-foreground font-body min-h-[60px]" placeholder="Buyer referrals in Dubai, off-market luxury listings, investor introductions..." /></div>
+        <div><Label className="font-body text-xs text-muted-foreground">What are you looking for? *</Label><Textarea value={form.looking_for} onChange={(e) => setForm({ ...form, looking_for: e.target.value })} className="bg-background border-border text-foreground font-body min-h-[60px]" placeholder="Partners in London, international investors, development opportunities..." /></div>
+        <Button type="submit" disabled={saving} className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
           {saving ? "Saving..." : "Save Profile"}
         </Button>
       </form>
