@@ -23,7 +23,7 @@ const AdminCollaborations = ({ data, profiles, onRefresh }: Props) => {
   const { toast } = useToast();
 
   const handleAction = async (id: string, status: string) => {
-    await supabase.from("collaboration_requests").update({ status }).eq("id", id);
+    await (supabase.from("collaboration_requests" as any).update({ status }) as any).eq("id", id);
     toast({ title: `Request ${status}` });
     onRefresh();
   };

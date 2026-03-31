@@ -98,7 +98,7 @@ const Investments = () => {
   const handleCollab = async () => {
     if (!user || !collabListing) return;
     setSending(true);
-    const { error } = await supabase.from("collaboration_requests").insert({
+    const { error } = await (supabase.from("collaboration_requests" as any).insert as any)({
       requester_id: user.id,
       listing_id: collabListing.id,
       reason: collabForm.reason,

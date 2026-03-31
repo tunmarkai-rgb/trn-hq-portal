@@ -21,7 +21,7 @@ const AdminInvestments = ({ data, profiles, onRefresh }: Props) => {
   };
 
   const handleDelete = async (id: string) => {
-    await supabase.from("investment_listings").delete().eq("id", id);
+    await (supabase.from("investment_listings" as any).delete() as any).eq("id", id);
     toast({ title: "Listing removed" });
     onRefresh();
   };
