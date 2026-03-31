@@ -58,7 +58,7 @@ const Investments = () => {
 
   const fetchData = async () => {
     const [listingsRes, profilesRes] = await Promise.all([
-      supabase.from("investment_listings").select("*").eq("deal_status", "Active").order("created_at", { ascending: false }),
+      (supabase.from("investment_listings" as any).select("*") as any).eq("deal_status", "Active").order("created_at", { ascending: false }),
       supabase.from("profiles").select("user_id, full_name"),
     ]);
     setListings(listingsRes.data || []);
