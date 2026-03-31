@@ -28,7 +28,7 @@ const CTASection = () => {
             className="bg-gold hover:bg-gold-dark text-navy font-body font-semibold px-12 py-7 text-lg rounded-lg transition-all hover:shadow-[0_0_50px_hsl(var(--gold)/0.3)]"
             asChild
           >
-            <a href="https://the-realty-network.circle.so/join?invitation_token=773b1957a12cdf5285c06327abca343cdcd3fd04-f9c234b8-0582-4b4f-abf1-ab8087dc5f0a" target="_blank" rel="noopener noreferrer">
+            <a href="https://trnportal.vercel.app/join" target="_blank" rel="noopener noreferrer">
               Join The Realty Network <ArrowRight className="ml-2 w-5 h-5" />
             </a>
           </Button>
