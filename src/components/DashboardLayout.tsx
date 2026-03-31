@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import trnLogo from "@/assets/trn-logo.png";
 
 const navItems = [
@@ -22,9 +23,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
 
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -120,6 +118,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <h1 className="font-display text-lg font-semibold text-foreground">
             {[...navItems, { label: "My Profile", path: "/dashboard/profile" }, { label: "Admin", path: "/dashboard/admin" }].find((n) => n.path === location.pathname)?.label || "Dashboard"}
           </h1>
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="flex-1 p-6 overflow-auto">{children}</main>
