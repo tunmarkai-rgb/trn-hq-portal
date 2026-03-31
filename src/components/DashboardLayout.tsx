@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight, Shield } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight, Shield, Building2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -11,9 +11,10 @@ const navItems = [
   { icon: Users, label: "Members", path: "/dashboard/directory" },
   { icon: Globe, label: "Network Map", path: "/dashboard/map" },
   { icon: TrendingUp, label: "Opportunities", path: "/dashboard/opportunities" },
+  { icon: Building2, label: "Investments", path: "/dashboard/investments" },
   { icon: ArrowLeftRight, label: "Introductions", path: "/dashboard/introductions" },
   { icon: Handshake, label: "My Deals", path: "/dashboard/deals" },
-  { icon: CalendarDays, label: "Calls & Updates", path: "/dashboard/events" },
+  { icon: CalendarDays, label: "Calls & Events", path: "/dashboard/events" },
   { icon: Briefcase, label: "Partners", path: "/dashboard/partners" },
 ];
 
