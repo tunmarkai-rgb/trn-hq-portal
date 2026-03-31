@@ -155,6 +155,36 @@ export type Database = {
         }
         Relationships: []
       }
+      introductions: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          requester_id: string
+          status: string
+          target_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          requester_id: string
+          status?: string
+          target_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          requester_id?: string
+          status?: string
+          target_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       knowledge_resources: {
         Row: {
           author: string | null
@@ -182,6 +212,39 @@ export type Database = {
           id?: string
           link?: string | null
           title?: string
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          category: string
+          contact_info: string | null
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          website: string | null
+        }
+        Insert: {
+          category?: string
+          contact_info?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          website?: string | null
+        }
+        Update: {
+          category?: string
+          contact_info?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          website?: string | null
         }
         Relationships: []
       }
