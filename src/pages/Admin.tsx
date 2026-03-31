@@ -296,6 +296,22 @@ const Admin = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Create Member Dialog */}
+      <Dialog open={createMemberOpen} onOpenChange={setCreateMemberOpen}>
+        <DialogContent className="bg-card border-border text-foreground">
+          <DialogHeader><DialogTitle className="font-display">Create New Member</DialogTitle></DialogHeader>
+          <form onSubmit={handleCreateMember} className="space-y-4">
+            <div><Label className="font-body text-xs text-muted-foreground">Full Name *</Label><Input value={memberForm.full_name} onChange={(e) => setMemberForm({ ...memberForm, full_name: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Jake Engerer" /></div>
+            <div><Label className="font-body text-xs text-muted-foreground">Email *</Label><Input type="email" value={memberForm.email} onChange={(e) => setMemberForm({ ...memberForm, email: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="member@example.com" /></div>
+            <div><Label className="font-body text-xs text-muted-foreground">Password *</Label><Input type="text" value={memberForm.password} onChange={(e) => setMemberForm({ ...memberForm, password: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Set a temporary password" /></div>
+            <p className="font-body text-[10px] text-muted-foreground">The member can change their password after first login via "Forgot password".</p>
+            <Button type="submit" disabled={creatingMember} className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              {creatingMember ? "Creating..." : "Create Member Account"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
