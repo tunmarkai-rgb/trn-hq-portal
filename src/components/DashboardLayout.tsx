@@ -1,21 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Users, Handshake, Building2, CalendarDays, BookOpen, Settings, LogOut, Globe, TrendingUp, MessageCircle, Briefcase } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import trnLogo from "@/assets/trn-logo.png";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Home", path: "/dashboard" },
   { icon: Users, label: "Directory", path: "/dashboard/directory" },
-  { icon: Globe, label: "Global Map", path: "/dashboard/map" },
-  { icon: TrendingUp, label: "Opportunities", path: "/dashboard/opportunities" },
-  { icon: Handshake, label: "Referrals", path: "/dashboard/referrals" },
-  { icon: Building2, label: "Deals", path: "/dashboard/deals" },
+  { icon: Globe, label: "Network Map", path: "/dashboard/map" },
+  { icon: TrendingUp, label: "Deal Flow", path: "/dashboard/opportunities" },
+  { icon: ArrowLeftRight, label: "Introductions", path: "/dashboard/introductions" },
+  { icon: Handshake, label: "My Deals", path: "/dashboard/deals" },
   { icon: CalendarDays, label: "Events", path: "/dashboard/events" },
-  { icon: BookOpen, label: "Knowledge", path: "/dashboard/knowledge" },
-  { icon: MessageCircle, label: "Community", path: "/dashboard/community" },
-  { icon: Briefcase, label: "Resources", path: "/dashboard/resources" },
-  { icon: Settings, label: "Profile", path: "/dashboard/profile" },
+  { icon: Briefcase, label: "Partners", path: "/dashboard/partners" },
 ];
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -23,15 +20,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const { signOut } = useAuth();
 
+  // Force dark mode
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+  }, []);
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-60 bg-card border-r border-border transform transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} flex flex-col`}>
-        <div className="flex items-center gap-3 px-5 h-14 border-b border-border shrink-0">
-          <img src={trnLogo} alt="TRN" className="h-6 w-6 object-contain" />
+      <aside className={`fixed inset-y-0 left-0 z-50 w-56 bg-card border-r border-border transform transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} flex flex-col`}>
+        <div className="flex items-center gap-3 px-5 h-16 border-b border-border shrink-0">
+          <img src={trnLogo} alt="TRN" className="h-7 w-7 object-contain" />
           <div className="flex flex-col">
             <span className="font-display text-sm font-bold text-foreground tracking-wide leading-tight">TRN HQ</span>
-            <span className="font-body text-[8px] text-gold/60 uppercase tracking-[0.2em]">Member Portal</span>
+            <span className="font-body text-[7px] text-gold/50 uppercase tracking-[0.25em]">Private Network</span>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="md:hidden ml-auto text-muted-foreground">
             <X className="w-5 h-5" />
@@ -46,23 +48,35 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 key={item.path}
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg font-body text-[13px] transition-all duration-200 ${
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-body text-[13px] transition-all duration-200 ${
                   isActive
-                    ? "bg-gold/10 text-gold border-l-2 border-gold"
+                    ? "bg-gold/10 text-gold"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
               >
-                <item.icon className="w-4 h-4 shrink-0" />
+                <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-gold" : ""}`} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-border shrink-0">
+        <div className="p-3 space-y-0.5 border-t border-border shrink-0">
+          <Link
+            to="/dashboard/profile"
+            onClick={() => setSidebarOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-body text-[13px] transition-all duration-200 ${
+              location.pathname === "/dashboard/profile"
+                ? "bg-gold/10 text-gold"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+            }`}
+          >
+            <Settings className="w-4 h-4 shrink-0" />
+            Profile
+          </Link>
           <button
             onClick={signOut}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg font-body text-[13px] text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors w-full"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-body text-[13px] text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors w-full"
           >
             <LogOut className="w-4 h-4" />
             Sign Out
@@ -82,7 +96,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <Menu className="w-5 h-5" />
           </button>
           <h1 className="font-display text-lg font-semibold text-foreground">
-            {navItems.find((n) => n.path === location.pathname)?.label || "Dashboard"}
+            {[...navItems, { label: "Profile", path: "/dashboard/profile" }].find((n) => n.path === location.pathname)?.label || "Dashboard"}
           </h1>
         </header>
 

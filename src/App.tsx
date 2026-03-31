@@ -11,14 +11,12 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Directory from "./pages/Directory";
 import Deals from "./pages/Deals";
-import Referrals from "./pages/Referrals";
 import Events from "./pages/Events";
-import Resources from "./pages/Resources";
 import Profile from "./pages/Profile";
 import GlobalMap from "./pages/GlobalMap";
 import Opportunities from "./pages/Opportunities";
-import Knowledge from "./pages/Knowledge";
-import Community from "./pages/Community";
+import Introductions from "./pages/Introductions";
+import Partners from "./pages/Partners";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,12 +40,10 @@ const App = () => (
             <Route path="/dashboard/directory" element={<DashboardRoute><Directory /></DashboardRoute>} />
             <Route path="/dashboard/map" element={<DashboardRoute><GlobalMap /></DashboardRoute>} />
             <Route path="/dashboard/opportunities" element={<DashboardRoute><Opportunities /></DashboardRoute>} />
+            <Route path="/dashboard/introductions" element={<DashboardRoute><Introductions /></DashboardRoute>} />
             <Route path="/dashboard/deals" element={<DashboardRoute><Deals /></DashboardRoute>} />
-            <Route path="/dashboard/referrals" element={<DashboardRoute><Referrals /></DashboardRoute>} />
             <Route path="/dashboard/events" element={<DashboardRoute><Events /></DashboardRoute>} />
-            <Route path="/dashboard/knowledge" element={<DashboardRoute><Knowledge /></DashboardRoute>} />
-            <Route path="/dashboard/community" element={<DashboardRoute><Community /></DashboardRoute>} />
-            <Route path="/dashboard/resources" element={<DashboardRoute><Resources /></DashboardRoute>} />
+            <Route path="/dashboard/partners" element={<DashboardRoute><Partners /></DashboardRoute>} />
             <Route path="/dashboard/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
