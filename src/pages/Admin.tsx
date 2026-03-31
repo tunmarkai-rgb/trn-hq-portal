@@ -9,18 +9,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Check, X, Eye, Plus, Shield, Users, TrendingUp, ArrowLeftRight, Briefcase, Trophy } from "lucide-react";
+import { Check, X, Plus, Shield, Users, TrendingUp, ArrowLeftRight, Briefcase, Trophy, CalendarDays, Handshake, Building2 } from "lucide-react";
 import { format } from "date-fns";
+import AdminMembers from "@/components/admin/AdminMembers";
+import AdminEvents from "@/components/admin/AdminEvents";
+import AdminInvestments from "@/components/admin/AdminInvestments";
+import AdminCollaborations from "@/components/admin/AdminCollaborations";
+import AdminPartners from "@/components/admin/AdminPartners";
 
-type AdminTab = "members" | "opportunities" | "introductions" | "deals" | "partners" | "updates";
+type AdminTab = "members" | "opportunities" | "investments" | "collaborations" | "introductions" | "deals" | "events" | "partners" | "updates";
 
 const tabs: { id: AdminTab; label: string; icon: any }[] = [
   { id: "members", label: "Members", icon: Users },
   { id: "opportunities", label: "Opportunities", icon: TrendingUp },
-  { id: "introductions", label: "Introductions", icon: ArrowLeftRight },
+  { id: "investments", label: "Investments", icon: Building2 },
+  { id: "collaborations", label: "Collaborations", icon: Handshake },
+  { id: "introductions", label: "Intros", icon: ArrowLeftRight },
   { id: "deals", label: "Deals", icon: Briefcase },
+  { id: "events", label: "Calls", icon: CalendarDays },
   { id: "partners", label: "Partners", icon: Briefcase },
-  { id: "updates", label: "Updates & Wins", icon: Trophy },
+  { id: "updates", label: "Updates", icon: Trophy },
 ];
 
 const Admin = () => {
@@ -31,33 +39,8 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>("members");
   const [data, setData] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<Record<string, string>>({});
-
-  // Update/win creation
   const [updateOpen, setUpdateOpen] = useState(false);
   const [updateForm, setUpdateForm] = useState({ type: "update", title: "", summary: "", content: "", markets: "" });
-
-  // Create member
-  const [createMemberOpen, setCreateMemberOpen] = useState(false);
-  const [memberForm, setMemberForm] = useState({ email: "", password: "", full_name: "" });
-  const [creatingMember, setCreatingMember] = useState(false);
-
-  const handleCreateMember = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
-    setCreatingMember(true);
-    const { data: result, error } = await supabase.functions.invoke("create-member", {
-      body: memberForm,
-    });
-    if (error || result?.error) {
-      toast({ title: "Error", description: result?.error || error?.message, variant: "destructive" });
-    } else {
-      toast({ title: "Member created", description: `${memberForm.email} can now log in.` });
-      setCreateMemberOpen(false);
-      setMemberForm({ email: "", password: "", full_name: "" });
-      fetchTabData();
-    }
-    setCreatingMember(false);
-  };
 
   useEffect(() => {
     if (!user) return;
@@ -86,11 +69,20 @@ const Admin = () => {
       case "opportunities":
         res = await supabase.from("referral_opportunities").select("*").order("created_at", { ascending: false });
         break;
+      case "investments":
+        res = await (supabase.from("investment_listings" as any).select("*") as any).order("created_at", { ascending: false });
+        break;
+      case "collaborations":
+        res = await (supabase.from("collaboration_requests" as any).select("*") as any).order("created_at", { ascending: false });
+        break;
       case "introductions":
         res = await supabase.from("introductions").select("*").order("created_at", { ascending: false });
         break;
       case "deals":
         res = await supabase.from("deals").select("*").order("created_at", { ascending: false });
+        break;
+      case "events":
+        res = await supabase.from("events").select("*").order("event_date", { ascending: false });
         break;
       case "partners":
         res = await supabase.from("partners").select("*").order("name");
@@ -141,20 +133,13 @@ const Admin = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Admin Panel</h2>
-          <p className="font-body text-sm text-muted-foreground">Manage network quality, approvals, and content</p>
+          <p className="font-body text-sm text-muted-foreground">Full network control — members, deals, content, calls</p>
         </div>
-        <div className="flex gap-2">
-          {activeTab === "members" && (
-            <Button onClick={() => setCreateMemberOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
-              <Plus className="w-4 h-4 mr-1" /> Create Member
-            </Button>
-          )}
-          {activeTab === "updates" && (
-            <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
-              <Plus className="w-4 h-4 mr-1" /> New Update
-            </Button>
-          )}
-        </div>
+        {activeTab === "updates" && (
+          <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+            <Plus className="w-4 h-4 mr-1" /> New Update
+          </Button>
+        )}
       </div>
 
       {/* Tabs */}
@@ -163,7 +148,7 @@ const Admin = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-md font-body text-sm transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-body text-xs transition-colors ${
               activeTab === tab.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -174,103 +159,96 @@ const Admin = () => {
       </div>
 
       {/* Tab content */}
-      <div className="space-y-3">
-        {data.length === 0 ? (
-          <p className="text-center py-12 font-body text-muted-foreground">No items found.</p>
-        ) : activeTab === "members" ? (
-          data.map((m) => (
-            <div key={m.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <p className="font-body text-sm font-medium text-foreground">{m.full_name || "No name"}</p>
-                <p className="font-body text-[11px] text-muted-foreground">{m.email} · {[m.city, m.country].filter(Boolean).join(", ") || "No location"}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className={`font-body text-[10px] ${m.approval_status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"}`}>
-                  {m.approval_status}
-                </Badge>
-              </div>
-            </div>
-          ))
-        ) : activeTab === "introductions" ? (
-          data.map((i) => (
-            <div key={i.id} className="bg-card border border-border rounded-xl p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="font-body text-sm text-foreground">
-                  <span className="font-medium">{profiles[i.requester_id] || "Member"}</span>
-                  <span className="text-muted-foreground"> → </span>
-                  <span className="font-medium">{profiles[i.target_id] || "Member"}</span>
-                </p>
-                <Badge variant="secondary" className={`font-body text-[10px] ${i.status === "pending" ? "bg-yellow-500/10 text-yellow-400" : i.status === "accepted" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
-                  {i.status}
-                </Badge>
-              </div>
-              {i.reason && <p className="font-body text-xs text-muted-foreground italic">"{i.reason}"</p>}
-              <div className="flex items-center gap-2">
-                <span className="font-body text-[10px] text-muted-foreground">{format(new Date(i.created_at), "MMM d, yyyy")}</span>
-                {i.status === "pending" && (
-                  <>
-                    <Button size="sm" onClick={() => handleIntroAction(i.id, "accepted")} className="bg-emerald-600 hover:bg-emerald-700 text-white font-body text-xs h-7 ml-auto">
-                      <Check className="w-3 h-3 mr-1" /> Approve
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleIntroAction(i.id, "declined")} className="border-border text-muted-foreground font-body text-xs h-7">
-                      <X className="w-3 h-3 mr-1" /> Decline
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          ))
-        ) : activeTab === "opportunities" ? (
-          data.map((o) => (
-            <div key={o.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <p className="font-body text-sm font-medium text-foreground">{o.title}</p>
-                <p className="font-body text-[11px] text-muted-foreground">{o.opportunity_type} · {[o.market_city, o.market_country].filter(Boolean).join(", ")} · by {profiles[o.posted_by] || "Member"}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline" onClick={() => handleToggleFeatured(o.id, o.featured)} className={`font-body text-xs h-7 ${o.featured ? "border-gold/30 text-gold" : "border-border text-muted-foreground"}`}>
-                  {o.featured ? "★ Featured" : "Feature"}
-                </Button>
-                <Badge variant="secondary" className={`font-body text-[10px] ${o.status === "open" ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"}`}>
-                  {o.status}
-                </Badge>
-              </div>
-            </div>
-          ))
-        ) : activeTab === "deals" ? (
-          data.map((d) => (
-            <div key={d.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <p className="font-body text-sm font-medium text-foreground">{d.title}</p>
-                <p className="font-body text-[11px] text-muted-foreground">{d.stage || d.status} · {[d.city, d.country].filter(Boolean).join(", ")}{d.estimated_value ? ` · $${Number(d.estimated_value).toLocaleString()}` : ""}</p>
-              </div>
-              <Badge variant="secondary" className="font-body text-[10px]">{d.stage || d.status}</Badge>
-            </div>
-          ))
+      <div>
+        {activeTab === "members" ? (
+          <AdminMembers data={data} onRefresh={fetchTabData} />
+        ) : activeTab === "events" ? (
+          <AdminEvents data={data} onRefresh={fetchTabData} />
+        ) : activeTab === "investments" ? (
+          <AdminInvestments data={data} profiles={profiles} onRefresh={fetchTabData} />
+        ) : activeTab === "collaborations" ? (
+          <AdminCollaborations data={data} profiles={profiles} onRefresh={fetchTabData} />
         ) : activeTab === "partners" ? (
-          data.map((p) => (
-            <div key={p.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <p className="font-body text-sm font-medium text-foreground">{p.name}</p>
-                <p className="font-body text-[11px] text-muted-foreground">{p.category}</p>
-              </div>
-            </div>
-          ))
-        ) : activeTab === "updates" ? (
-          data.map((u) => (
-            <div key={u.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className={`font-body text-[10px] ${u.type === "win" ? "bg-gold/10 text-gold border-gold/20" : "bg-secondary text-muted-foreground"}`}>
-                    {u.type}
+          <AdminPartners data={data} onRefresh={fetchTabData} />
+        ) : activeTab === "introductions" ? (
+          <div className="space-y-3">
+            {data.length === 0 ? <p className="text-center py-12 font-body text-muted-foreground">No introductions.</p> : data.map((i) => (
+              <div key={i.id} className="bg-card border border-border rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="font-body text-sm text-foreground">
+                    <span className="font-medium">{profiles[i.requester_id] || "Member"}</span>
+                    <span className="text-muted-foreground"> → </span>
+                    <span className="font-medium">{profiles[i.target_id] || "Member"}</span>
+                  </p>
+                  <Badge variant="secondary" className={`font-body text-[10px] ${i.status === "pending" ? "bg-yellow-500/10 text-yellow-400" : i.status === "accepted" ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
+                    {i.status}
                   </Badge>
-                  <p className="font-body text-sm font-medium text-foreground">{u.title}</p>
                 </div>
-                {u.summary && <p className="font-body text-[11px] text-muted-foreground mt-1">{u.summary}</p>}
+                {i.reason && <p className="font-body text-xs text-muted-foreground italic">"{i.reason}"</p>}
+                <div className="flex items-center gap-2">
+                  <span className="font-body text-[10px] text-muted-foreground">{format(new Date(i.created_at), "MMM d, yyyy")}</span>
+                  {i.status === "pending" && (
+                    <>
+                      <Button size="sm" onClick={() => handleIntroAction(i.id, "accepted")} className="bg-emerald-600 hover:bg-emerald-700 text-white font-body text-xs h-7 ml-auto">
+                        <Check className="w-3 h-3 mr-1" /> Approve
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleIntroAction(i.id, "declined")} className="border-border text-muted-foreground font-body text-xs h-7">
+                        <X className="w-3 h-3 mr-1" /> Decline
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
-              <span className="font-body text-[10px] text-muted-foreground">{format(new Date(u.created_at), "MMM d")}</span>
-            </div>
-          ))
+            ))}
+          </div>
+        ) : activeTab === "opportunities" ? (
+          <div className="space-y-3">
+            {data.length === 0 ? <p className="text-center py-12 font-body text-muted-foreground">No opportunities.</p> : data.map((o) => (
+              <div key={o.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <p className="font-body text-sm font-medium text-foreground">{o.title}</p>
+                  <p className="font-body text-[11px] text-muted-foreground">{o.opportunity_type} · {[o.market_city, o.market_country].filter(Boolean).join(", ")} · by {profiles[o.posted_by] || "Member"}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={() => handleToggleFeatured(o.id, o.featured)} className={`font-body text-xs h-7 ${o.featured ? "border-gold/30 text-gold" : "border-border text-muted-foreground"}`}>
+                    {o.featured ? "★ Featured" : "Feature"}
+                  </Button>
+                  <Badge variant="secondary" className={`font-body text-[10px] ${o.status === "open" ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"}`}>
+                    {o.status}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : activeTab === "deals" ? (
+          <div className="space-y-3">
+            {data.length === 0 ? <p className="text-center py-12 font-body text-muted-foreground">No deals.</p> : data.map((d) => (
+              <div key={d.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <p className="font-body text-sm font-medium text-foreground">{d.title}</p>
+                  <p className="font-body text-[11px] text-muted-foreground">{d.stage || d.status} · {[d.city, d.country].filter(Boolean).join(", ")}{d.estimated_value ? ` · $${Number(d.estimated_value).toLocaleString()}` : ""} · {profiles[d.created_by] || "Member"}</p>
+                </div>
+                <Badge variant="secondary" className="font-body text-[10px]">{d.stage || d.status}</Badge>
+              </div>
+            ))}
+          </div>
+        ) : activeTab === "updates" ? (
+          <div className="space-y-3">
+            {data.length === 0 ? <p className="text-center py-12 font-body text-muted-foreground">No updates.</p> : data.map((u) => (
+              <div key={u.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className={`font-body text-[10px] ${u.type === "win" ? "bg-gold/10 text-gold border-gold/20" : "bg-secondary text-muted-foreground"}`}>
+                      {u.type}
+                    </Badge>
+                    <p className="font-body text-sm font-medium text-foreground">{u.title}</p>
+                  </div>
+                  {u.summary && <p className="font-body text-[11px] text-muted-foreground mt-1">{u.summary}</p>}
+                </div>
+                <span className="font-body text-[10px] text-muted-foreground">{format(new Date(u.created_at), "MMM d")}</span>
+              </div>
+            ))}
+          </div>
         ) : null}
       </div>
 
@@ -293,22 +271,6 @@ const Admin = () => {
             <div><Label className="font-body text-xs text-muted-foreground">Summary</Label><Textarea value={updateForm.summary} onChange={(e) => setUpdateForm({ ...updateForm, summary: e.target.value })} className="bg-background border-border text-foreground font-body min-h-[60px]" /></div>
             <div><Label className="font-body text-xs text-muted-foreground">Markets (comma separated)</Label><Input value={updateForm.markets} onChange={(e) => setUpdateForm({ ...updateForm, markets: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="Dubai, London, Marbella" /></div>
             <Button type="submit" className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">Publish</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Create Member Dialog */}
-      <Dialog open={createMemberOpen} onOpenChange={setCreateMemberOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
-          <DialogHeader><DialogTitle className="font-display">Create New Member</DialogTitle></DialogHeader>
-          <form onSubmit={handleCreateMember} className="space-y-4">
-            <div><Label className="font-body text-xs text-muted-foreground">Full Name *</Label><Input value={memberForm.full_name} onChange={(e) => setMemberForm({ ...memberForm, full_name: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Jake Engerer" /></div>
-            <div><Label className="font-body text-xs text-muted-foreground">Email *</Label><Input type="email" value={memberForm.email} onChange={(e) => setMemberForm({ ...memberForm, email: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="member@example.com" /></div>
-            <div><Label className="font-body text-xs text-muted-foreground">Password *</Label><Input type="text" value={memberForm.password} onChange={(e) => setMemberForm({ ...memberForm, password: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Set a temporary password" /></div>
-            <p className="font-body text-[10px] text-muted-foreground">The member can change their password after first login via "Forgot password".</p>
-            <Button type="submit" disabled={creatingMember} className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
-              {creatingMember ? "Creating..." : "Create Member Account"}
-            </Button>
           </form>
         </DialogContent>
       </Dialog>
