@@ -73,7 +73,7 @@ const Investments = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    const { error } = await supabase.from("investment_listings").insert({
+    const { error } = await (supabase.from("investment_listings" as any).insert as any)({
       title: form.title,
       investment_type: form.investment_type,
       category: form.category,
