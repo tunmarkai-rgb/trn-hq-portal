@@ -142,6 +142,8 @@ export type Database = {
           recording_url: string | null
           speaker: string | null
           summary: string | null
+          target_audience: string | null
+          timezone: string | null
           title: string
         }
         Insert: {
@@ -154,6 +156,8 @@ export type Database = {
           recording_url?: string | null
           speaker?: string | null
           summary?: string | null
+          target_audience?: string | null
+          timezone?: string | null
           title: string
         }
         Update: {
@@ -166,6 +170,8 @@ export type Database = {
           recording_url?: string | null
           speaker?: string | null
           summary?: string | null
+          target_audience?: string | null
+          timezone?: string | null
           title?: string
         }
         Relationships: []
@@ -287,6 +293,39 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          link: string | null
+          message: string | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message?: string | null
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message?: string | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
         }
         Relationships: []
       }
