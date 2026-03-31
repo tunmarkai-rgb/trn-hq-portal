@@ -1,29 +1,37 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import trnLogo from "@/assets/trn-logo.png";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Home", path: "/dashboard" },
-  { icon: Users, label: "Directory", path: "/dashboard/directory" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: Users, label: "Members", path: "/dashboard/directory" },
   { icon: Globe, label: "Network Map", path: "/dashboard/map" },
-  { icon: TrendingUp, label: "Deal Flow", path: "/dashboard/opportunities" },
+  { icon: TrendingUp, label: "Opportunities", path: "/dashboard/opportunities" },
   { icon: ArrowLeftRight, label: "Introductions", path: "/dashboard/introductions" },
   { icon: Handshake, label: "My Deals", path: "/dashboard/deals" },
-  { icon: CalendarDays, label: "Events", path: "/dashboard/events" },
+  { icon: CalendarDays, label: "Calls & Updates", path: "/dashboard/events" },
   { icon: Briefcase, label: "Partners", path: "/dashboard/partners" },
 ];
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
-  // Force dark mode
   useEffect(() => {
     document.documentElement.classList.add("dark");
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => {
+      setIsAdmin(!!data);
+    });
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -62,6 +70,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         </nav>
 
         <div className="p-3 space-y-0.5 border-t border-border shrink-0">
+          {isAdmin && (
+            <Link
+              to="/dashboard/admin"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-body text-[13px] transition-all duration-200 ${
+                location.pathname === "/dashboard/admin"
+                  ? "bg-gold/10 text-gold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+              }`}
+            >
+              <Shield className="w-4 h-4 shrink-0" />
+              Admin
+            </Link>
+          )}
           <Link
             to="/dashboard/profile"
             onClick={() => setSidebarOpen(false)}
@@ -72,7 +94,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             }`}
           >
             <Settings className="w-4 h-4 shrink-0" />
-            Profile
+            My Profile
           </Link>
           <button
             onClick={signOut}
@@ -96,7 +118,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <Menu className="w-5 h-5" />
           </button>
           <h1 className="font-display text-lg font-semibold text-foreground">
-            {[...navItems, { label: "Profile", path: "/dashboard/profile" }].find((n) => n.path === location.pathname)?.label || "Dashboard"}
+            {[...navItems, { label: "My Profile", path: "/dashboard/profile" }, { label: "Admin", path: "/dashboard/admin" }].find((n) => n.path === location.pathname)?.label || "Dashboard"}
           </h1>
         </header>
 
