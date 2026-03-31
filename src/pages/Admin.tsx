@@ -143,11 +143,18 @@ const Admin = () => {
           <h2 className="font-display text-2xl font-bold text-foreground">Admin Panel</h2>
           <p className="font-body text-sm text-muted-foreground">Manage network quality, approvals, and content</p>
         </div>
-        {activeTab === "updates" && (
-          <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
-            <Plus className="w-4 h-4 mr-1" /> New Update
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {activeTab === "members" && (
+            <Button onClick={() => setCreateMemberOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              <Plus className="w-4 h-4 mr-1" /> Create Member
+            </Button>
+          )}
+          {activeTab === "updates" && (
+            <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              <Plus className="w-4 h-4 mr-1" /> New Update
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}
