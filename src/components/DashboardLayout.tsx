@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, LayoutDashboard, Users, Handshake, Globe, CalendarDays, Settings, LogOut, TrendingUp, Briefcase, ArrowLeftRight, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import trnLogo from "@/assets/trn-logo.png";
 
 const navItems = [
