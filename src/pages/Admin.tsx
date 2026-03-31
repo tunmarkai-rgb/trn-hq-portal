@@ -36,6 +36,29 @@ const Admin = () => {
   const [updateOpen, setUpdateOpen] = useState(false);
   const [updateForm, setUpdateForm] = useState({ type: "update", title: "", summary: "", content: "", markets: "" });
 
+  // Create member
+  const [createMemberOpen, setCreateMemberOpen] = useState(false);
+  const [memberForm, setMemberForm] = useState({ email: "", password: "", full_name: "" });
+  const [creatingMember, setCreatingMember] = useState(false);
+
+  const handleCreateMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setCreatingMember(true);
+    const { data: result, error } = await supabase.functions.invoke("create-member", {
+      body: memberForm,
+    });
+    if (error || result?.error) {
+      toast({ title: "Error", description: result?.error || error?.message, variant: "destructive" });
+    } else {
+      toast({ title: "Member created", description: `${memberForm.email} can now log in.` });
+      setCreateMemberOpen(false);
+      setMemberForm({ email: "", password: "", full_name: "" });
+      fetchTabData();
+    }
+    setCreatingMember(false);
+  };
+
   useEffect(() => {
     if (!user) return;
     supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data: hasRole }) => {
@@ -120,11 +143,18 @@ const Admin = () => {
           <h2 className="font-display text-2xl font-bold text-foreground">Admin Panel</h2>
           <p className="font-body text-sm text-muted-foreground">Manage network quality, approvals, and content</p>
         </div>
-        {activeTab === "updates" && (
-          <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
-            <Plus className="w-4 h-4 mr-1" /> New Update
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {activeTab === "members" && (
+            <Button onClick={() => setCreateMemberOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              <Plus className="w-4 h-4 mr-1" /> Create Member
+            </Button>
+          )}
+          {activeTab === "updates" && (
+            <Button onClick={() => setUpdateOpen(true)} className="bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              <Plus className="w-4 h-4 mr-1" /> New Update
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}
@@ -263,6 +293,22 @@ const Admin = () => {
             <div><Label className="font-body text-xs text-muted-foreground">Summary</Label><Textarea value={updateForm.summary} onChange={(e) => setUpdateForm({ ...updateForm, summary: e.target.value })} className="bg-background border-border text-foreground font-body min-h-[60px]" /></div>
             <div><Label className="font-body text-xs text-muted-foreground">Markets (comma separated)</Label><Input value={updateForm.markets} onChange={(e) => setUpdateForm({ ...updateForm, markets: e.target.value })} className="bg-background border-border text-foreground font-body" placeholder="Dubai, London, Marbella" /></div>
             <Button type="submit" className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">Publish</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Member Dialog */}
+      <Dialog open={createMemberOpen} onOpenChange={setCreateMemberOpen}>
+        <DialogContent className="bg-card border-border text-foreground">
+          <DialogHeader><DialogTitle className="font-display">Create New Member</DialogTitle></DialogHeader>
+          <form onSubmit={handleCreateMember} className="space-y-4">
+            <div><Label className="font-body text-xs text-muted-foreground">Full Name *</Label><Input value={memberForm.full_name} onChange={(e) => setMemberForm({ ...memberForm, full_name: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Jake Engerer" /></div>
+            <div><Label className="font-body text-xs text-muted-foreground">Email *</Label><Input type="email" value={memberForm.email} onChange={(e) => setMemberForm({ ...memberForm, email: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="member@example.com" /></div>
+            <div><Label className="font-body text-xs text-muted-foreground">Password *</Label><Input type="text" value={memberForm.password} onChange={(e) => setMemberForm({ ...memberForm, password: e.target.value })} required className="bg-background border-border text-foreground font-body" placeholder="Set a temporary password" /></div>
+            <p className="font-body text-[10px] text-muted-foreground">The member can change their password after first login via "Forgot password".</p>
+            <Button type="submit" disabled={creatingMember} className="w-full bg-gold hover:bg-gold-dark text-primary-foreground font-body font-semibold">
+              {creatingMember ? "Creating..." : "Create Member Account"}
+            </Button>
           </form>
         </DialogContent>
       </Dialog>
