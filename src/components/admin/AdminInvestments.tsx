@@ -15,7 +15,7 @@ const AdminInvestments = ({ data, profiles, onRefresh }: Props) => {
   const { toast } = useToast();
 
   const handleToggleFeatured = async (id: string, featured: boolean) => {
-    await supabase.from("investment_listings").update({ featured: !featured }).eq("id", id);
+    await (supabase.from("investment_listings" as any).update({ featured: !featured }) as any).eq("id", id);
     toast({ title: featured ? "Unfeatured" : "Featured" });
     onRefresh();
   };
