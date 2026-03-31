@@ -72,13 +72,18 @@ export type Database = {
           created_at: string
           created_by: string
           deal_type: string | null
+          destination_member_id: string | null
           estimated_value: number | null
           id: string
           notes: string | null
           partner_id: string | null
           property_address: string | null
           referral_fee_percent: number | null
+          related_intro_id: string | null
+          related_opportunity_id: string | null
+          stage: string | null
           status: string
+          summary: string | null
           title: string
           updated_at: string
         }
@@ -88,13 +93,18 @@ export type Database = {
           created_at?: string
           created_by: string
           deal_type?: string | null
+          destination_member_id?: string | null
           estimated_value?: number | null
           id?: string
           notes?: string | null
           partner_id?: string | null
           property_address?: string | null
           referral_fee_percent?: number | null
+          related_intro_id?: string | null
+          related_opportunity_id?: string | null
+          stage?: string | null
           status?: string
+          summary?: string | null
           title: string
           updated_at?: string
         }
@@ -104,13 +114,18 @@ export type Database = {
           created_at?: string
           created_by?: string
           deal_type?: string | null
+          destination_member_id?: string | null
           estimated_value?: number | null
           id?: string
           notes?: string | null
           partner_id?: string | null
           property_address?: string | null
           referral_fee_percent?: number | null
+          related_intro_id?: string | null
+          related_opportunity_id?: string | null
+          stage?: string | null
           status?: string
+          summary?: string | null
           title?: string
           updated_at?: string
         }
@@ -157,31 +172,52 @@ export type Database = {
       }
       introductions: {
         Row: {
+          admin_notes: string | null
+          context: string | null
           created_at: string
           id: string
+          linked_deal_id: string | null
+          linked_opportunity_id: string | null
           message: string | null
+          reason: string | null
           requester_id: string
           status: string
           target_id: string
+          target_type: string | null
           updated_at: string
+          urgency: string | null
         }
         Insert: {
+          admin_notes?: string | null
+          context?: string | null
           created_at?: string
           id?: string
+          linked_deal_id?: string | null
+          linked_opportunity_id?: string | null
           message?: string | null
+          reason?: string | null
           requester_id: string
           status?: string
           target_id: string
+          target_type?: string | null
           updated_at?: string
+          urgency?: string | null
         }
         Update: {
+          admin_notes?: string | null
+          context?: string | null
           created_at?: string
           id?: string
+          linked_deal_id?: string | null
+          linked_opportunity_id?: string | null
           message?: string | null
+          reason?: string | null
           requester_id?: string
           status?: string
           target_id?: string
+          target_type?: string | null
           updated_at?: string
+          urgency?: string | null
         }
         Relationships: []
       }
@@ -215,6 +251,45 @@ export type Database = {
         }
         Relationships: []
       }
+      network_updates: {
+        Row: {
+          content: string | null
+          created_at: string
+          featured_image: string | null
+          id: string
+          markets: string[] | null
+          published: boolean | null
+          summary: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          featured_image?: string | null
+          id?: string
+          markets?: string[] | null
+          published?: boolean | null
+          summary?: string | null
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          featured_image?: string | null
+          id?: string
+          markets?: string[] | null
+          published?: boolean | null
+          summary?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       partners: {
         Row: {
           category: string
@@ -222,9 +297,16 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          internal_contact_email: string | null
+          internal_contact_name: string | null
+          internal_notes: string | null
+          internal_referral_structure: string | null
           logo_url: string | null
+          markets_served: string[] | null
           name: string
+          use_cases: string | null
           website: string | null
+          who_they_help: string | null
         }
         Insert: {
           category?: string
@@ -232,9 +314,16 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          internal_contact_email?: string | null
+          internal_contact_name?: string | null
+          internal_notes?: string | null
+          internal_referral_structure?: string | null
           logo_url?: string | null
+          markets_served?: string[] | null
           name: string
+          use_cases?: string | null
           website?: string | null
+          who_they_help?: string | null
         }
         Update: {
           category?: string
@@ -242,16 +331,25 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          internal_contact_email?: string | null
+          internal_contact_name?: string | null
+          internal_notes?: string | null
+          internal_referral_structure?: string | null
           logo_url?: string | null
+          markets_served?: string[] | null
           name?: string
+          use_cases?: string | null
           website?: string | null
+          who_they_help?: string | null
         }
         Relationships: []
       }
       profiles: {
         Row: {
           agency: string | null
+          approval_status: string
           avatar_url: string | null
+          bio: string | null
           can_help_with: string | null
           city: string | null
           country: string | null
@@ -262,16 +360,22 @@ export type Database = {
           instagram: string | null
           languages: string[] | null
           latitude: number | null
+          linkedin_url: string | null
           longitude: number | null
           looking_for: string | null
           niche: string[] | null
           role: string | null
+          title: string | null
           updated_at: string
           user_id: string
+          website_url: string | null
+          years_experience: number | null
         }
         Insert: {
           agency?: string | null
+          approval_status?: string
           avatar_url?: string | null
+          bio?: string | null
           can_help_with?: string | null
           city?: string | null
           country?: string | null
@@ -282,16 +386,22 @@ export type Database = {
           instagram?: string | null
           languages?: string[] | null
           latitude?: number | null
+          linkedin_url?: string | null
           longitude?: number | null
           looking_for?: string | null
           niche?: string[] | null
           role?: string | null
+          title?: string | null
           updated_at?: string
           user_id: string
+          website_url?: string | null
+          years_experience?: number | null
         }
         Update: {
           agency?: string | null
+          approval_status?: string
           avatar_url?: string | null
+          bio?: string | null
           can_help_with?: string | null
           city?: string | null
           country?: string | null
@@ -302,45 +412,64 @@ export type Database = {
           instagram?: string | null
           languages?: string[] | null
           latitude?: number | null
+          linkedin_url?: string | null
           longitude?: number | null
           looking_for?: string | null
           niche?: string[] | null
           role?: string | null
+          title?: string | null
           updated_at?: string
           user_id?: string
+          website_url?: string | null
+          years_experience?: number | null
         }
         Relationships: []
       }
       referral_opportunities: {
         Row: {
+          budget_range: string | null
           created_at: string
           description: string | null
+          featured: boolean | null
           id: string
+          ideal_counterpart: string | null
           market_city: string | null
           market_country: string | null
           opportunity_type: string
           posted_by: string
+          status: string | null
           title: string
+          urgency: string | null
         }
         Insert: {
+          budget_range?: string | null
           created_at?: string
           description?: string | null
+          featured?: boolean | null
           id?: string
+          ideal_counterpart?: string | null
           market_city?: string | null
           market_country?: string | null
           opportunity_type?: string
           posted_by: string
+          status?: string | null
           title: string
+          urgency?: string | null
         }
         Update: {
+          budget_range?: string | null
           created_at?: string
           description?: string | null
+          featured?: boolean | null
           id?: string
+          ideal_counterpart?: string | null
           market_city?: string | null
           market_country?: string | null
           opportunity_type?: string
           posted_by?: string
+          status?: string | null
           title?: string
+          urgency?: string | null
         }
         Relationships: []
       }
