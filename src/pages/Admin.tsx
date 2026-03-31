@@ -36,6 +36,29 @@ const Admin = () => {
   const [updateOpen, setUpdateOpen] = useState(false);
   const [updateForm, setUpdateForm] = useState({ type: "update", title: "", summary: "", content: "", markets: "" });
 
+  // Create member
+  const [createMemberOpen, setCreateMemberOpen] = useState(false);
+  const [memberForm, setMemberForm] = useState({ email: "", password: "", full_name: "" });
+  const [creatingMember, setCreatingMember] = useState(false);
+
+  const handleCreateMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setCreatingMember(true);
+    const { data: result, error } = await supabase.functions.invoke("create-member", {
+      body: memberForm,
+    });
+    if (error || result?.error) {
+      toast({ title: "Error", description: result?.error || error?.message, variant: "destructive" });
+    } else {
+      toast({ title: "Member created", description: `${memberForm.email} can now log in.` });
+      setCreateMemberOpen(false);
+      setMemberForm({ email: "", password: "", full_name: "" });
+      fetchTabData();
+    }
+    setCreatingMember(false);
+  };
+
   useEffect(() => {
     if (!user) return;
     supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data: hasRole }) => {
