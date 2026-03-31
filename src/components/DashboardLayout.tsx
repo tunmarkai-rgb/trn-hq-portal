@@ -118,6 +118,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <h1 className="font-display text-lg font-semibold text-foreground">
             {[...navItems, { label: "My Profile", path: "/dashboard/profile" }, { label: "Admin", path: "/dashboard/admin" }].find((n) => n.path === location.pathname)?.label || "Dashboard"}
           </h1>
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="flex-1 p-6 overflow-auto">{children}</main>
