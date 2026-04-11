@@ -48,6 +48,11 @@ const Opportunities = () => {
       supabase.from("referral_opportunities").select("*").eq("status", "open").order("created_at", { ascending: false }),
       supabase.from("profiles").select("user_id, full_name"),
     ]);
+    if (oppsRes.error) {
+      toast({ title: "Failed to load opportunities", description: oppsRes.error.message, variant: "destructive" });
+      setLoading(false);
+      return;
+    }
     setOpportunities(oppsRes.data || []);
     const profileMap: Record<string, string> = {};
     (profilesRes.data || []).forEach((p: any) => { profileMap[p.user_id] = p.full_name || "Member"; });
@@ -172,7 +177,11 @@ const Opportunities = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-body text-muted-foreground">Loading opportunities...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-40 bg-secondary/30 rounded-xl animate-pulse" />
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 font-body text-muted-foreground">
           <TrendingUp className="w-12 h-12 mx-auto mb-3 opacity-20" />
@@ -198,7 +207,7 @@ const Opportunities = () => {
                   <Link to={`/dashboard/member/${o.posted_by}`} className="flex items-center gap-1 hover:text-gold transition-colors">
                     <User className="w-3 h-3" />{profiles[o.posted_by] || "Member"}
                   </Link>
-                  <span>{format(new Date(o.created_at), "MMM d")}</span>
+                  <span>{o.created_at ? format(new Date(o.created_at), "MMM d") : ""}</span>
                 </div>
                 {o.budget_range && <span className="font-body text-[11px] text-gold/60">{o.budget_range}</span>}
               </div>

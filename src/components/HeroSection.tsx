@@ -1,8 +1,29 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const HeroSection = () => {
+  const [stats, setStats] = useState({ members: "...", markets: "...", deals: "..." });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const [membersRes, dealsRes] = await Promise.all([
+        supabase.from("profiles").select("country").eq("approval_status", "approved"),
+        supabase.from("deals").select("id", { count: "exact", head: true }).eq("stage", "Closed Won"),
+      ]);
+      const allMembers = membersRes.data || [];
+      const uniqueCountries = new Set(allMembers.map((m: any) => m.country).filter(Boolean));
+      setStats({
+        members: allMembers.length > 0 ? `${allMembers.length}+` : "250+",
+        markets: uniqueCountries.size > 0 ? `${uniqueCountries.size}+` : "50+",
+        deals: dealsRes.count != null && dealsRes.count > 0 ? `${dealsRes.count}+` : "250+",
+      });
+    };
+    fetchStats();
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy">
       {/* Gold accent line */}
@@ -43,7 +64,7 @@ const HeroSection = () => {
               className="bg-gold hover:bg-gold-dark text-navy font-body font-semibold px-10 py-7 text-base rounded-lg transition-all hover:shadow-[0_0_40px_hsl(var(--gold)/0.25)]"
               asChild
             >
-              <a href="https://trnportal.vercel.app/join" target="_blank" rel="noopener noreferrer">
+              <a href="/join">
                 Join The Network <ArrowRight className="ml-2 w-5 h-5" />
               </a>
             </Button>
@@ -64,9 +85,9 @@ const HeroSection = () => {
             className="grid grid-cols-3 gap-12 max-w-md mx-auto"
           >
             {[
-              { label: "Markets", value: "250+" },
-              { label: "Active Agents", value: "Growing" },
-              { label: "Deals Closed", value: "250+" },
+              { label: "Members", value: stats.members },
+              { label: "Markets", value: stats.markets },
+              { label: "Deals Closed", value: stats.deals },
             ].map(({ label, value }) => (
               <div key={label} className="text-center">
                 <div className="font-display text-3xl font-bold text-gold">{value}</div>

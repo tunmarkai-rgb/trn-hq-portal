@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { MapPin, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 interface MemberLocation {
   full_name: string | null;
@@ -15,16 +16,20 @@ interface MemberLocation {
 }
 
 const GlobalMap = () => {
+  const { toast } = useToast();
   const [members, setMembers] = useState<MemberLocation[]>([]);
   const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMembers = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("full_name, city, country, agency, latitude, longitude, niche")
         .not("latitude", "is", null);
+      if (error) {
+        toast({ title: "Failed to load map data", description: error.message, variant: "destructive" });
+      }
       setMembers((data as MemberLocation[]) || []);
       setLoading(false);
     };
@@ -51,8 +56,15 @@ const GlobalMap = () => {
       </div>
 
       {/* Map */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-2xl overflow-hidden" style={{ height: "500px" }}>
-        {MapComponent && !loading ? (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-2xl overflow-hidden" style={{ height: "600px", width: "100%" }}>
+        {!loading && MapComponent && members.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full gap-3">
+            <MapPin className="w-8 h-8 text-muted-foreground/40" />
+            <p className="font-body text-sm text-muted-foreground text-center max-w-xs">
+              No member locations available yet. Members can add their location from their profile page.
+            </p>
+          </div>
+        ) : MapComponent && !loading ? (
           <MapComponent members={members} />
         ) : (
           <div className="flex items-center justify-center h-full">

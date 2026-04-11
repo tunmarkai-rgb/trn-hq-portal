@@ -154,7 +154,11 @@ const Deals = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-body text-muted-foreground">Loading deals...</div>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-28 bg-secondary/30 rounded-xl animate-pulse" />
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 font-body text-muted-foreground">
           <Building2 className="w-12 h-12 mx-auto mb-3 opacity-20" />
@@ -176,7 +180,7 @@ const Deals = () => {
               </div>
               {d.summary && <p className="font-body text-sm text-muted-foreground">{d.summary}</p>}
               <div className="flex items-center justify-between pt-2 border-t border-border">
-                <span className="font-body text-[10px] text-muted-foreground">Updated {format(new Date(d.updated_at), "MMM d, yyyy")}</span>
+                <span className="font-body text-[10px] text-muted-foreground">Updated {d.updated_at ? format(new Date(d.updated_at), "MMM d, yyyy") : ""}</span>
                 <Select value={d.stage || "New"} onValueChange={(v) => handleStageUpdate(d.id, v)}>
                   <SelectTrigger className="w-[160px] h-8 bg-background border-border text-foreground font-body text-xs">
                     <SelectValue />

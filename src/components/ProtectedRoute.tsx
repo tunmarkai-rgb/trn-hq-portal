@@ -20,6 +20,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/login" replace />;
   }
 
+  if (session.user?.user_metadata?.force_password_reset) {
+    return <Navigate to="/reset-password?welcome=true" replace />;
+  }
+
   return <>{children}</>;
 };
 

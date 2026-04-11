@@ -31,6 +31,11 @@ const Events = () => {
       supabase.from("events").select("*").order("event_date", { ascending: false }),
       user ? (supabase.from("event_rsvps" as any).select("*") as any).eq("user_id", user.id) : Promise.resolve({ data: [] }),
     ]);
+    if (eventsRes.error) {
+      toast({ title: "Failed to load events", description: eventsRes.error.message, variant: "destructive" });
+      setLoading(false);
+      return;
+    }
     const now = new Date().toISOString();
     const allEvents = eventsRes.data || [];
     setUpcoming(allEvents.filter((e: any) => e.event_date >= now).reverse());
@@ -71,7 +76,12 @@ const Events = () => {
     fetchEvents();
   };
 
-  if (loading) return <div className="text-center py-12 font-body text-muted-foreground">Loading events...</div>;
+  if (loading) return (
+    <div className="space-y-4 max-w-4xl">
+      <div className="h-8 w-32 bg-secondary/40 rounded-md animate-pulse" />
+      <div className="grid md:grid-cols-2 gap-4">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-40 bg-secondary/30 rounded-xl animate-pulse" />)}</div>
+    </div>
+  );
 
   return (
     <div className="space-y-8">
@@ -96,15 +106,15 @@ const Events = () => {
                 <motion.div key={e.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-card border border-border rounded-2xl p-6 hover:border-gold/20 transition-all duration-300 space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="w-14 h-14 rounded-xl bg-gold/10 flex flex-col items-center justify-center shrink-0">
-                      <span className="font-display text-lg font-bold text-gold leading-none">{format(new Date(e.event_date), "d")}</span>
-                      <span className="font-body text-[10px] text-gold/70 uppercase">{format(new Date(e.event_date), "MMM")}</span>
+                      <span className="font-display text-lg font-bold text-gold leading-none">{e.event_date ? format(new Date(e.event_date), "d") : "?"}</span>
+                      <span className="font-body text-[10px] text-gold/70 uppercase">{e.event_date ? format(new Date(e.event_date), "MMM") : ""}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-display text-base font-semibold text-foreground">{e.title}</h4>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <Badge className={`${eventTypeColors[e.event_type] || "bg-secondary text-muted-foreground"} font-body text-[10px]`}>{e.event_type}</Badge>
                         <span className="font-body text-[10px] text-muted-foreground flex items-center gap-1">
-                          <Clock className="w-3 h-3" />{format(new Date(e.event_date), "h:mm a")}
+                          <Clock className="w-3 h-3" />{e.event_date ? format(new Date(e.event_date), "h:mm a") : ""}
                         </span>
                         {goingCount > 0 && (
                           <span className="font-body text-[10px] text-emerald-400">{goingCount} going</span>
@@ -164,7 +174,7 @@ const Events = () => {
               <div key={e.id} className="bg-card border border-border rounded-xl p-4 space-y-2 opacity-80">
                 <div className="flex items-center justify-between">
                   <h4 className="font-body text-sm font-medium text-foreground">{e.title}</h4>
-                  <span className="font-body text-[10px] text-muted-foreground">{format(new Date(e.event_date), "MMM d, yyyy")}</span>
+                  <span className="font-body text-[10px] text-muted-foreground">{e.event_date ? format(new Date(e.event_date), "MMM d, yyyy") : ""}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className={`${eventTypeColors[e.event_type] || "bg-secondary text-muted-foreground"} font-body text-[10px]`}>{e.event_type}</Badge>

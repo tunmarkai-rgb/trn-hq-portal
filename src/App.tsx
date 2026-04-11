@@ -9,6 +9,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/DashboardLayout";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import CommunityJoin from "./pages/CommunityJoin";
 import Dashboard from "./pages/Dashboard";
 import Directory from "./pages/Directory";
 import MemberProfile from "./pages/MemberProfile";
@@ -21,6 +22,10 @@ import Introductions from "./pages/Introductions";
 import Partners from "./pages/Partners";
 import Investments from "./pages/Investments";
 import Admin from "./pages/Admin";
+import VideoLibrary from "./pages/VideoLibrary";
+import ReferralTemplates from "./pages/ReferralTemplates";
+import EducationHub from "./pages/EducationHub";
+import SOPLibrary from "./pages/SOPLibrary";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +45,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/join" element={<CommunityJoin />} />
             <Route path="/" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/dashboard/directory" element={<DashboardRoute><Directory /></DashboardRoute>} />
@@ -53,6 +59,10 @@ const App = () => (
             <Route path="/dashboard/partners" element={<DashboardRoute><Partners /></DashboardRoute>} />
             <Route path="/dashboard/admin" element={<DashboardRoute><Admin /></DashboardRoute>} />
             <Route path="/dashboard/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
+            <Route path="/dashboard/videos" element={<DashboardRoute><VideoLibrary /></DashboardRoute>} />
+            <Route path="/dashboard/referral-templates" element={<DashboardRoute><ReferralTemplates /></DashboardRoute>} />
+            <Route path="/dashboard/education" element={<DashboardRoute><EducationHub /></DashboardRoute>} />
+            <Route path="/dashboard/sop" element={<DashboardRoute><SOPLibrary /></DashboardRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </AuthProvider>

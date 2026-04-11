@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +16,9 @@ const Profile = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [rawProfile, setRawProfile] = useState<any>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [form, setForm] = useState({
     full_name: "", title: "", city: "", country: "", agency: "", role: "Agent",
     instagram: "", linkedin_url: "", website_url: "", bio: "",
@@ -24,6 +30,8 @@ const Profile = () => {
     if (!user) return;
     supabase.from("profiles").select("*").eq("user_id", user.id).single().then(({ data }) => {
       if (data) {
+        setRawProfile(data);
+        setAvatarUrl(data.avatar_url || null);
         setForm({
           full_name: data.full_name || "", title: data.title || "",
           city: data.city || "", country: data.country || "",
@@ -39,6 +47,34 @@ const Profile = () => {
       setLoading(false);
     });
   }, [user]);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please choose an image under 2MB.", variant: "destructive" });
+      return;
+    }
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/avatar.${ext}`;
+    const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (uploadError) {
+      toast({ title: "Upload failed", description: uploadError.message, variant: "destructive" });
+      setUploadingAvatar(false);
+      return;
+    }
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+    const { error: updateError } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("user_id", user.id);
+    if (updateError) {
+      toast({ title: "Could not save avatar URL", description: updateError.message, variant: "destructive" });
+    } else {
+      setAvatarUrl(publicUrl);
+      setRawProfile((prev: any) => prev ? { ...prev, avatar_url: publicUrl } : prev);
+      toast({ title: "Profile photo updated" });
+    }
+    setUploadingAvatar(false);
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,11 +102,35 @@ const Profile = () => {
     setSaving(false);
   };
 
-  if (loading) return <div className="text-center py-12 font-body text-muted-foreground">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Skeleton className="h-8 w-40" />
+        <Skeleton className="h-16 rounded-xl" />
+        <Skeleton className="h-24 rounded-xl" />
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-10 rounded-lg" />
+        ))}
+      </div>
+    );
+  }
 
-  const completedFields = [form.full_name, form.city, form.country, form.agency, form.can_help_with, form.looking_for, form.niche, form.bio].filter(Boolean).length;
-  const totalFields = 8;
+  const completionFields = [
+    form.full_name, form.city, form.country, form.agency, form.role,
+    form.niche, form.languages, form.can_help_with, form.looking_for,
+    form.bio, avatarUrl, form.instagram, form.linkedin_url,
+  ];
+  const completedFields = completionFields.filter(Boolean).length;
+  const totalFields = completionFields.length;
   const completion = Math.round((completedFields / totalFields) * 100);
+  const remaining = totalFields - completedFields;
+
+  const initials = (form.full_name || "TRN")
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -79,15 +139,66 @@ const Profile = () => {
         <p className="font-body text-sm text-muted-foreground">A strong profile attracts more introductions and referrals</p>
       </div>
 
+      {/* Completion bar */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-xl p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="font-body text-xs text-muted-foreground">Profile completeness</span>
+          <div>
+            <span className="font-body text-xs text-muted-foreground">Profile completeness</span>
+            {remaining > 0 && (
+              <span className="font-body text-xs text-gold ml-2">· {remaining} field{remaining !== 1 ? "s" : ""} remaining</span>
+            )}
+          </div>
           <span className={`font-body text-xs font-medium ${completion === 100 ? "text-emerald-400" : "text-gold"}`}>{completion}%</span>
         </div>
         <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-          <div className="h-full bg-gold rounded-full transition-all duration-500" style={{ width: `${completion}%` }} />
+          <div
+            className={`h-full rounded-full transition-all duration-500 ${completion === 100 ? "bg-emerald-400" : "bg-gold"}`}
+            style={{ width: `${completion}%` }}
+          />
         </div>
+        {completion === 100 && (
+          <p className="font-body text-[10px] text-emerald-400 mt-1.5">Profile complete — you're getting maximum visibility</p>
+        )}
       </motion.div>
+
+      {/* Avatar upload */}
+      <div className="flex items-center gap-5 bg-card border border-border rounded-xl p-5">
+        <div className="relative">
+          <Avatar className="w-20 h-20">
+            <AvatarImage src={avatarUrl ?? undefined} />
+            <AvatarFallback className="bg-gold/10 text-gold font-display text-2xl font-bold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          {uploadingAvatar && (
+            <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
+              <div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
+        </div>
+        <div>
+          <p className="font-body text-sm font-medium text-foreground mb-0.5">Profile Photo</p>
+          <p className="font-body text-xs text-muted-foreground mb-3">JPG or PNG · max 2MB</p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-gold/30 text-gold hover:bg-gold/10 font-body text-xs"
+            onClick={() => document.getElementById("avatar-upload")?.click()}
+            disabled={uploadingAvatar}
+            type="button"
+          >
+            <Camera className="w-3.5 h-3.5 mr-1.5" />
+            {uploadingAvatar ? "Uploading..." : "Change Photo"}
+          </Button>
+          <input
+            id="avatar-upload"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={handleAvatarUpload}
+          />
+        </div>
+      </div>
 
       <form onSubmit={handleSave} className="bg-card border border-border rounded-xl p-6 space-y-5">
         <h3 className="font-display text-base font-semibold text-foreground">Basic Info</h3>

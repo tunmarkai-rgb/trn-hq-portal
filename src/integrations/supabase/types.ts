@@ -557,6 +557,252 @@ export type Database = {
         }
         Relationships: []
       }
+      collaboration_requests: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          market_relevance: string | null
+          reason: string | null
+          requester_id: string
+          status: string
+          what_they_bring: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          market_relevance?: string | null
+          reason?: string | null
+          requester_id: string
+          status?: string
+          what_they_bring?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          market_relevance?: string | null
+          reason?: string | null
+          requester_id?: string
+          status?: string
+          what_they_bring?: string | null
+        }
+        Relationships: []
+      }
+      community_members: {
+        Row: {
+          city: string | null
+          country: string
+          created_at: string
+          email: string | null
+          first_name: string
+          form_submitted_at: string | null
+          how_did_you_hear: string | null
+          id: string
+          instagram: string | null
+          last_name: string | null
+          linkedin: string | null
+          notes: string | null
+          removal_scheduled_at: string | null
+          role: string | null
+          status: string
+          whatsapp: string
+        }
+        Insert: {
+          city?: string | null
+          country: string
+          created_at?: string
+          email?: string | null
+          first_name: string
+          form_submitted_at?: string | null
+          how_did_you_hear?: string | null
+          id?: string
+          instagram?: string | null
+          last_name?: string | null
+          linkedin?: string | null
+          notes?: string | null
+          removal_scheduled_at?: string | null
+          role?: string | null
+          status?: string
+          whatsapp: string
+        }
+        Update: {
+          city?: string | null
+          country?: string
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          form_submitted_at?: string | null
+          how_did_you_hear?: string | null
+          id?: string
+          instagram?: string | null
+          last_name?: string | null
+          linkedin?: string | null
+          notes?: string | null
+          removal_scheduled_at?: string | null
+          role?: string | null
+          status?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      event_rsvps: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      investment_listings: {
+        Row: {
+          asking_price: string | null
+          category: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          deal_status: string
+          description: string | null
+          featured: boolean | null
+          id: string
+          investment_type: string
+          posted_by: string
+          roi_potential: string | null
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          asking_price?: string | null
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          deal_status?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          investment_type?: string
+          posted_by: string
+          roi_potential?: string | null
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          asking_price?: string | null
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          deal_status?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          investment_type?: string
+          posted_by?: string
+          roi_potential?: string | null
+          summary?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      referral_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          download_link: string
+          id: string
+          name: string
+          type: string
+          version: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          download_link: string
+          id?: string
+          name: string
+          type?: string
+          version?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          download_link?: string
+          id?: string
+          name?: string
+          type?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
+      videos: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+          youtube_url: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+          youtube_url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+          youtube_url?: string
+        }
+        Relationships: []
+      }
+      sop_library: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

@@ -58,7 +58,12 @@ const MemberProfile = () => {
     setSending(false);
   };
 
-  if (loading) return <div className="text-center py-12 font-body text-muted-foreground">Loading profile...</div>;
+  if (loading) return (
+    <div className="max-w-2xl space-y-4">
+      <div className="h-32 bg-secondary/30 rounded-xl animate-pulse" />
+      {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-16 bg-secondary/30 rounded-xl animate-pulse" />)}
+    </div>
+  );
   if (!profile) return <div className="text-center py-12 font-body text-muted-foreground">Member not found.</div>;
 
   const isSelf = user?.id === userId;

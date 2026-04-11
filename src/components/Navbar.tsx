@@ -27,7 +27,7 @@ const Navbar = () => {
             className="bg-gold hover:bg-gold-dark text-navy font-body font-semibold rounded-lg px-6"
             asChild
           >
-            <a href="https://trnportal.vercel.app/join" target="_blank" rel="noopener noreferrer">
+            <a href="/join">
               Join Now <ArrowRight className="ml-1 w-4 h-4" />
             </a>
           </Button>
@@ -45,7 +45,7 @@ const Navbar = () => {
           <a href="#resources" onClick={() => setOpen(false)} className="block font-body text-sm text-[hsl(220,10%,55%)] hover:text-gold">Resources</a>
           <a href="/login" onClick={() => setOpen(false)} className="block font-body text-sm text-gold">Member Login</a>
           <Button size="sm" className="w-full bg-gold hover:bg-gold-dark text-navy font-body font-semibold" asChild>
-            <a href="https://trnportal.vercel.app/join" target="_blank" rel="noopener noreferrer">
+            <a href="/join">
               Join Now
             </a>
           </Button>

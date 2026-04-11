@@ -61,6 +61,11 @@ const Investments = () => {
       (supabase.from("investment_listings" as any).select("*") as any).eq("deal_status", "Active").order("created_at", { ascending: false }),
       supabase.from("profiles").select("user_id, full_name"),
     ]);
+    if (listingsRes.error) {
+      toast({ title: "Failed to load investments", description: listingsRes.error.message, variant: "destructive" });
+      setLoading(false);
+      return;
+    }
     setListings(listingsRes.data || []);
     const map: Record<string, string> = {};
     (profilesRes.data || []).forEach((p: any) => { map[p.user_id] = p.full_name || "Member"; });
@@ -208,7 +213,11 @@ const Investments = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-body text-muted-foreground">Loading investments...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-52 bg-secondary/30 rounded-xl animate-pulse" />
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 font-body text-muted-foreground">
           <TrendingUp className="w-12 h-12 mx-auto mb-3 opacity-20" />
@@ -247,7 +256,7 @@ const Investments = () => {
                     <User className="w-3 h-3" />{profiles[l.posted_by] || "Member"}
                   </Link>
                   <span>·</span>
-                  <span>{format(new Date(l.created_at), "MMM d")}</span>
+                  <span>{l.created_at ? format(new Date(l.created_at), "MMM d") : ""}</span>
                 </div>
                 {user?.id !== l.posted_by && (
                   <div className="flex gap-2">

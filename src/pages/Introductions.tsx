@@ -74,7 +74,11 @@ const Introductions = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-body text-muted-foreground">Loading...</div>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-28 bg-secondary/30 rounded-xl animate-pulse" />
+          ))}
+        </div>
       ) : current.length === 0 ? (
         <div className="text-center py-16 font-body text-muted-foreground">
           <ArrowLeftRight className="w-12 h-12 mx-auto mb-3 opacity-20" />
@@ -117,7 +121,7 @@ const Introductions = () => {
                 )}
 
                 <div className="flex items-center justify-between">
-                  <span className="font-body text-[11px] text-muted-foreground">{format(new Date(intro.created_at), "MMM d, yyyy")}</span>
+                  <span className="font-body text-[11px] text-muted-foreground">{intro.created_at ? format(new Date(intro.created_at), "MMM d, yyyy") : ""}</span>
 
                   {tab === "received" && intro.status === "pending" && (
                     <div className="flex gap-2">

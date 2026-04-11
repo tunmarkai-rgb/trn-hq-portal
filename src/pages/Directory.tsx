@@ -4,10 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Profile {
   id: string;
@@ -23,10 +25,12 @@ interface Profile {
   can_help_with: string | null;
   looking_for: string | null;
   title: string | null;
+  avatar_url: string | null;
 }
 
 const Directory = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState("all");
@@ -35,7 +39,10 @@ const Directory = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("approval_status", "approved").order("full_name");
+      const { data, error } = await supabase.from("profiles").select("*").eq("approval_status", "approved").order("full_name");
+      if (error) {
+        toast({ title: "Failed to load directory", description: error.message, variant: "destructive" });
+      }
       setProfiles((data as Profile[]) || []);
       setLoading(false);
     };
@@ -95,9 +102,19 @@ const Directory = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-body text-muted-foreground">Loading directory...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="h-48 bg-secondary/30 rounded-xl animate-pulse" />
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12 font-body text-muted-foreground">No members found.</div>
+        <div className="py-16 text-center space-y-3">
+          <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center mx-auto">
+            <Search className="w-5 h-5 text-gold/30" />
+          </div>
+          <p className="font-body text-sm text-muted-foreground">No members found</p>
+          <p className="font-body text-xs text-muted-foreground/60">Try adjusting your search or filters</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((p, i) => (
@@ -106,12 +123,18 @@ const Directory = () => {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.02 }}
-              className="bg-card border border-border rounded-xl p-5 space-y-3 hover:border-gold/20 transition-all duration-300"
+              whileHover={{ y: -2 }}
+              className="bg-card border border-gold/10 hover:border-gold/30 hover:shadow-[0_4px_20px_hsl(var(--gold)/0.06)] rounded-xl overflow-hidden transition-all duration-200 space-y-3"
             >
+              <div className="h-[2px] bg-gradient-to-r from-gold/40 via-gold/15 to-transparent" />
+              <div className="px-5 pb-5 pt-3 space-y-3">
               <div className="flex items-start gap-3">
-                <div className="w-11 h-11 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-                  <span className="font-display text-base font-bold text-gold">{(p.full_name || "?")[0]}</span>
-                </div>
+                <Avatar className="w-11 h-11 shrink-0">
+                  <AvatarImage src={p.avatar_url ?? undefined} />
+                  <AvatarFallback className="bg-gold/10 text-gold font-display text-base font-bold">
+                    {(p.full_name || "?")[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="min-w-0 flex-1">
                   <Link to={`/dashboard/member/${p.user_id}`} className="font-display text-base font-semibold text-foreground truncate block hover:text-gold transition-colors">
                     {p.full_name || "Member"}
@@ -158,6 +181,7 @@ const Directory = () => {
                     <ArrowLeftRight className="w-3 h-3" />
                   </Button>
                 </Link>
+              </div>
               </div>
             </motion.div>
           ))}

@@ -17,9 +17,12 @@ interface Props {
 
 const AdminMembers = ({ data, onRefresh }: Props) => {
   const { toast } = useToast();
+  const GHL_ACCEPTED_WEBHOOK = "https://n8n.therealty-network.com/webhook/trn-accepted-member";
+
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editMember, setEditMember] = useState<any>(null);
+  const [originalApprovalStatus, setOriginalApprovalStatus] = useState<string>("");
   const [memberForm, setMemberForm] = useState({ email: "", password: "", full_name: "" });
   const [creating, setCreating] = useState(false);
   const [search, setSearch] = useState("");
@@ -53,11 +56,33 @@ const AdminMembers = ({ data, onRefresh }: Props) => {
     }).eq("id", editMember.id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Member updated" });
-      setEditOpen(false);
-      onRefresh();
+      return;
     }
+    // Fire GHL/n8n webhook when a member is approved for the first time
+    if (editMember.approval_status === "approved" && originalApprovalStatus !== "approved") {
+      const [firstName, ...rest] = (editMember.full_name || "").split(" ");
+      try {
+        await fetch(GHL_ACCEPTED_WEBHOOK, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: editMember.email,
+            first_name: firstName || editMember.full_name,
+            last_name: rest.join(" ") || "",
+            full_name: editMember.full_name,
+            country: editMember.country,
+            city: editMember.city,
+            agency: editMember.agency,
+            role: editMember.role,
+          }),
+        });
+      } catch {
+        // Webhook failure is silent — profile is already saved
+      }
+    }
+    toast({ title: "Member updated" });
+    setEditOpen(false);
+    onRefresh();
   };
 
   const filtered = data.filter((m) => {
@@ -90,7 +115,7 @@ const AdminMembers = ({ data, onRefresh }: Props) => {
             <Badge variant="secondary" className={`font-body text-[10px] ${m.approval_status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : m.approval_status === "rejected" ? "bg-red-500/10 text-red-400 border-red-500/20" : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"}`}>
               {m.approval_status}
             </Badge>
-            <Button size="sm" variant="ghost" onClick={() => { setEditMember({ ...m }); setEditOpen(true); }} className="text-muted-foreground hover:text-foreground h-8 w-8 p-0">
+            <Button size="sm" variant="ghost" onClick={() => { setEditMember({ ...m }); setOriginalApprovalStatus(m.approval_status || ""); setEditOpen(true); }} className="text-muted-foreground hover:text-foreground h-8 w-8 p-0">
               <Pencil className="w-3.5 h-3.5" />
             </Button>
           </div>
