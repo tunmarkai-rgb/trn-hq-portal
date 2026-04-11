@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import trnLogo from "@/assets/trn-logo.png";
+import loginBg from "@/assets/login-bg.jpg";
 
 const pillars = [
   { icon: Globe, label: "Global Reach", desc: "Members across 50+ markets" },
@@ -65,18 +66,25 @@ const Login = () => {
       <div className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent z-50" />
 
       {/* LEFT PANEL — branding (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative flex-col justify-between p-12 bg-[hsl(220,40%,8%)] overflow-hidden">
-        {/* Animated grid background */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative flex-col justify-between p-12 overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${loginBg})` }}
+        />
+        {/* Dark navy overlay for readability */}
+        <div className="absolute inset-0 bg-[hsl(220,40%,8%)]/80" />
+        {/* Animated grid over image */}
         <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--gold)/0.04)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--gold)/0.04)_1px,transparent_1px)] bg-[size:60px_60px]" />
 
         {/* Floating ambient orbs */}
         <motion.div
-          className="absolute top-1/4 -left-24 w-96 h-96 rounded-full bg-gold/5 blur-3xl pointer-events-none"
+          className="absolute top-1/4 -left-24 w-96 h-96 rounded-full bg-gold/10 blur-3xl pointer-events-none"
           animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-1/4 right-0 w-72 h-72 rounded-full bg-blue-800/15 blur-3xl pointer-events-none"
+          className="absolute bottom-1/4 right-0 w-72 h-72 rounded-full bg-navy/40 blur-2xl pointer-events-none"
           animate={{ x: [0, -20, 0], y: [0, 20, 0] }}
           transition={{ duration: 18, delay: 3, repeat: Infinity, ease: "easeInOut" }}
         />
