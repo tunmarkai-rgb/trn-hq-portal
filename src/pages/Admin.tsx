@@ -54,6 +54,7 @@ const Admin = () => {
 
   useEffect(() => {
     if (!isAdmin) return;
+    setData([]);
     fetchTabData();
   }, [isAdmin, activeTab]);
 

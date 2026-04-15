@@ -100,7 +100,7 @@ const AdminEvents = ({ data, onRefresh }: Props) => {
               <Badge variant="secondary" className="font-body text-[10px]">{e.event_type}</Badge>
             </div>
             <p className="font-body text-[11px] text-muted-foreground">
-              {format(new Date(e.event_date), "MMM d, yyyy 'at' h:mm a")}
+              {e.event_date ? format(new Date(e.event_date), "MMM d, yyyy 'at' h:mm a") : "TBD"}
               {e.speaker ? ` · ${e.speaker}` : ""}
             </p>
           </div>

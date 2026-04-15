@@ -22,3 +22,17 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test artifacts & screenshots
+test_screenshots/
+supabase/.temp/
+
+# Old recon/scratch test scripts (keep only trn_full_test.py + setup_test_users.py)
+trn_recon*.py
+trn_test*.py
+trn_investor_test.py
+trn_admin_tabs_test.py
+trn_member_*.py
+test_ambassador*.py
+test_phase1_create_accounts.py
+ss_login.png

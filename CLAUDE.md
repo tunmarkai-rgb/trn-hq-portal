@@ -4,13 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 The Realty Network (TRN) — private membership portal for international real estate professionals.
-Live URL: https://trn-portal.vercel.app
-Supabase Project: https://qebihjqqcbovmdwzhwrj.supabase.co
+- **Live URL**: https://trn-hq-portal.vercel.app
+- **Supabase Project**: https://qebihjqqcbovmdwzhwrj.supabase.co
+- **GitHub**: https://github.com/tunmarkai-rgb/trn-hq-portal
 
 ## Development Commands
 
 ```bash
-npm run dev          # Start Vite dev server
+npm run dev          # Start Vite dev server (http://localhost:8080)
 npm run build        # Production build (tsc + vite build)
 npm run lint         # ESLint check
 npm run preview      # Preview production build locally
@@ -22,14 +23,36 @@ Tests use Vitest + @testing-library/react. Test files live in `src/test/`. There
 
 Supabase env vars needed in `.env`:
 ```
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUBLISHABLE_KEY=
+VITE_SUPABASE_URL=https://qebihjqqcbovmdwzhwrj.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_nBCK9IpRl-SPXvmMKPIWnA_XUaLPhhd
 ```
+
+## E2E Testing
+
+### Running Tests
+```bash
+python setup_test_users.py   # Create test accounts + seed QA event (run once)
+python trn_full_test.py      # Full 4-persona Playwright test suite
+```
+
+Requires: `pip install playwright` + `playwright install chromium`
+Dev server must be running at `http://localhost:8080`.
+
+### Test Personas
+| Persona | Email | Password |
+|---------|-------|----------|
+| Admin | jake@therealty-network.com | TRNn8npass |
+| Agent (member) | tunmark25@gmail.com | TRN-Test-2024! |
+| Investor | tunmarkx@gmail.com | TRN-Test-2024! |
+| Ambassador | tunmarky@gmail.com | TRN-Test-2024! |
+
+### Latest Test Results (2026-04-15)
+**74 PASS | 0 FAIL | 5 PARTIAL** (partials are data/timing gaps, not bugs)
 
 ## Tech Stack
 - React 18 + Vite + TypeScript
 - Tailwind CSS v3 with shadcn/ui (Radix UI primitives)
-- Supabase (database + auth + storage)
+- Supabase (database + auth + storage + edge functions)
 - React Router DOM v6
 - TanStack Query v5 (data fetching)
 - React Hook Form + Zod (forms)
@@ -60,9 +83,10 @@ All dashboard routes use a `DashboardRoute` wrapper that composes `ProtectedRout
 ```
 
 ### Layout
-- `DashboardLayout` — sidebar (224px / w-56) + sticky header with `NotificationBell` and `ThemeToggle`
-- Sidebar collapses to overlay on mobile
-- Main content: `flex-1, p-6`
+- `DashboardLayout` — sidebar (w-56) + sticky header with `NotificationBell` and `ThemeToggle`
+- Sidebar collapses to overlay on mobile (hamburger menu, `md:` breakpoint)
+- Main content: `p-4 sm:p-6` (responsive)
+- Header: `px-4 sm:px-6` (responsive)
 
 ### Auth
 - `AuthContext` (src/contexts/AuthContext.tsx) provides: `session`, `user`, `loading`, `signOut`
@@ -74,6 +98,9 @@ All dashboard routes use a `DashboardRoute` wrapper that composes `ProtectedRout
 ### Supabase Client
 Import as: `import { supabase } from "@/integrations/supabase/client"`
 Types generated at `src/integrations/supabase/types.ts` — do not edit manually.
+
+### Edge Functions
+- `supabase/functions/create-member/` — creates Supabase auth users with `email_confirm: true`; called by `AdminMembers.tsx`. Deploy with: `npx supabase functions deploy create-member --project-ref qebihjqqcbovmdwzhwrj`
 
 ## Routes
 
@@ -202,23 +229,23 @@ Types: Residential / Commercial / Ambassador Collaboration / Off-Plan Developer
 ## Key UI Behaviours
 - **Announcements banner**: `Dashboard.tsx` queries `announcements` where `pinned=true`; each banner is dismissible (IDs stored in `localStorage` under `"trn_dismissed_announcements"`)
 - **Profile completion bar**: `Profile.tsx` tracks 13 fields (`full_name, city, country, agency, role, niche, languages, can_help_with, looking_for, bio, avatar_url, instagram, linkedin_url`); bar turns `emerald-400` at 100%
-- **Notification bell**: `NotificationBell.tsx` in `DashboardLayout` header; reads `notifications` table for current user; opening popover marks all as read
-- **Admin panel** (`/dashboard/admin`): 10 tabs — Members, Opportunities, Investments, Collaborations, Intros, Deals, Calls, Partners, Updates, Community
+- **Notification bell**: `NotificationBell.tsx` in `DashboardLayout` header; reads `notifications` table for current user; opening popover marks all as read; popover is `max-w-[calc(100vw-2rem)]` to prevent mobile overflow
+- **Admin panel** (`/dashboard/admin`): 10 tabs — Members, Opportunities, Investments, Collaborations, Intros, Deals, Calls, Partners, Updates, Community. **Important:** `setData([])` is called on every tab switch to prevent stale data crashing tab components.
+- **Collaborate button**: on Investment listings — only appears when `user.id !== listing.posted_by`
 
 ## Development Rules
 - TypeScript only — no `.jsx` files
 - Use shadcn/ui components, not raw HTML elements
 - Use Tailwind classes, not inline styles
 - `font-display` for headings, `font-body` for body text, `text-gold` for gold accents
-- Mobile first always
+- Mobile first always — use `p-4 sm:p-6` pattern, never hardcode `p-6` alone on containers
 - All data from Supabase — no hardcoded content
 - Every data fetch needs error state and loading state
 - `useAuth()` for user context — never call `supabase.auth` directly in components
+- Dialog widths: always add `w-[calc(100vw-2rem)] sm:w-auto max-w-lg` for mobile safety
+- Select/filter widths: use `w-full sm:w-[Xpx]` pattern, never fixed `w-[Xpx]` alone
 
-## Pending Migrations
-The following tables have TypeScript types defined but may not exist in Supabase yet — run CREATE TABLE migrations before using:
-`investment_listings`, `collaboration_requests`, `event_rsvps`, `videos`, `referral_templates`, `sop_library`
-
-Also verify:
-- `community_members` RLS allows public `INSERT` (anon role)
-- `knowledge_resources` RLS allows authenticated `SELECT`
+## Known Limitations
+- `supabase/functions/create-member` edge function must be deployed separately via CLI — it is not auto-deployed with the frontend
+- Role system is binary (admin/member) — member sub-types (Agent/Investor/Ambassador) are stored as free-text `profiles.role`, not enforced at DB or RLS level
+- No page-level guard on `/dashboard/sop` — only hidden in sidebar for non-admins

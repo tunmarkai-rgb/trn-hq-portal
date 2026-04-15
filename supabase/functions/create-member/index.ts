@@ -74,6 +74,23 @@ serve(async (req) => {
       });
     }
 
+    // Notify n8n to send welcome email to the new member (non-blocking)
+    try {
+      const n8nBaseUrl = Deno.env.get("N8N_BASE_URL") ?? "https://n8n.therealty-network.com";
+      await fetch(`${n8nBaseUrl}/webhook/trn-member-created`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          full_name: full_name || email,
+          temp_password: password,
+          login_url: "https://trn-portal.vercel.app/login",
+        }),
+      });
+    } catch {
+      // Webhook failure is silent — user is already created
+    }
+
     return new Response(
       JSON.stringify({ success: true, user_id: newUser.user.id, email }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
