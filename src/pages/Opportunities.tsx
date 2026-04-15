@@ -106,7 +106,7 @@ const Opportunities = () => {
               <Plus className="w-4 h-4 mr-1" /> Post Opportunity
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
             <DialogHeader><DialogTitle className="font-display">Post an Opportunity</DialogTitle></DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>

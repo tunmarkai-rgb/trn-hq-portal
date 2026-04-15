@@ -74,9 +74,9 @@ const Directory = () => {
           <h2 className="font-display text-2xl font-bold text-foreground">Member Directory</h2>
           <p className="font-body text-sm text-muted-foreground">{profiles.length} professionals across {countries.length} markets</p>
         </div>
-        <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
           <Select value={countryFilter} onValueChange={setCountryFilter}>
-            <SelectTrigger className="w-[150px] bg-card border-border text-foreground font-body">
+            <SelectTrigger className="w-full sm:w-[150px] bg-card border-border text-foreground font-body">
               <Filter className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
               <SelectValue placeholder="All Markets" />
             </SelectTrigger>
@@ -86,7 +86,7 @@ const Directory = () => {
             </SelectContent>
           </Select>
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-[140px] bg-card border-border text-foreground font-body">
+            <SelectTrigger className="w-full sm:w-[140px] bg-card border-border text-foreground font-body">
               <SelectValue placeholder="All Roles" />
             </SelectTrigger>
             <SelectContent className="bg-card border-border">

@@ -159,7 +159,7 @@ const Dashboard = () => {
       )}
 
       {/* Network Stats — glassmorphism cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
         {statCards.map((card, i) => (
           <motion.div
             key={card.label}
@@ -193,13 +193,13 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Featured Investments */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="lg:col-span-2 bg-card border border-border rounded-xl p-6"
+          className="lg:col-span-2 bg-card border border-border rounded-xl p-4 sm:p-6"
         >
           <div className="flex items-center justify-between mb-5">
             <SectionHeading title="Investment Board" />

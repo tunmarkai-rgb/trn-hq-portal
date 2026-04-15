@@ -187,7 +187,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Main */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <header className="h-14 border-b border-border flex items-center px-6 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="h-14 border-b border-border flex items-center px-4 sm:px-6 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
           <button onClick={() => setSidebarOpen(true)} className="md:hidden text-muted-foreground mr-4">
             <Menu className="w-5 h-5" />
           </button>
@@ -205,7 +205,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </header>
 
-        <main className="flex-1 p-6 overflow-auto">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 overflow-auto">{children}</main>
       </div>
     </div>
   );

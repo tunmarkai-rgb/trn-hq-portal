@@ -58,7 +58,7 @@ const NotificationBell = () => {
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-80 p-0 bg-card border-border shadow-xl"
+        className="w-80 max-w-[calc(100vw-2rem)] p-0 bg-card border-border shadow-xl"
       >
         <div className="px-4 py-3 border-b border-border flex items-center justify-between">
           <span className="font-display text-sm font-semibold text-foreground">Notifications</span>

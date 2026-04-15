@@ -141,7 +141,7 @@ const Investments = () => {
               <Plus className="w-4 h-4 mr-1" /> Post Investment
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
             <DialogHeader><DialogTitle className="font-display">Post an Investment Opportunity</DialogTitle></DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
@@ -273,7 +273,7 @@ const Investments = () => {
 
       {/* Collaboration Request Dialog */}
       <Dialog open={collabOpen} onOpenChange={setCollabOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader><DialogTitle className="font-display">Request Collaboration</DialogTitle></DialogHeader>
           {collabListing && (
             <div className="space-y-4">

@@ -101,7 +101,7 @@ const Deals = () => {
               <Plus className="w-4 h-4 mr-1" /> New Deal
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border text-foreground">
+          <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
             <DialogHeader><DialogTitle className="font-display">New Deal</DialogTitle></DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div><Label className="font-body text-xs text-muted-foreground">Deal Name *</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="bg-background border-border text-foreground font-body" /></div>
