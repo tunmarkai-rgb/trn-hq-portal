@@ -107,7 +107,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-56 bg-card border-r border-border transform transition-transform duration-200 md:relative md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} flex flex-col relative`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-56 bg-card border-r border-border transform transition-transform duration-200 md:relative md:translate-x-0 flex flex-col ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         {/* Gold right-edge accent */}
         <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-gold/15 to-transparent pointer-events-none" />
 
@@ -186,7 +186,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       )}
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 min-w-0 w-full flex flex-col min-h-screen">
         <header className="min-h-14 border-b border-border flex items-center px-4 sm:px-6 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
           <button onClick={() => setSidebarOpen(true)} className="md:hidden text-muted-foreground mr-4 shrink-0">
             <Menu className="w-5 h-5" />
