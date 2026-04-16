@@ -308,7 +308,7 @@ const Admin = () => {
 
       {/* Create Update Dialog */}
       <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader><DialogTitle className="font-display">Publish Update or Win</DialogTitle></DialogHeader>
           <form onSubmit={handleCreateUpdate} className="space-y-4">
             <div>

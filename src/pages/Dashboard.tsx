@@ -163,6 +163,7 @@ const Dashboard = () => {
         {statCards.map((card, i) => (
           <motion.div
             key={card.label}
+            className={statCards.length % 2 !== 0 && i === statCards.length - 1 ? 'col-span-2 sm:col-span-1' : ''}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + i * 0.05 }}

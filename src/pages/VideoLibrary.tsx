@@ -115,7 +115,7 @@ const VideoLibrary = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Video Library</h2>
           <p className="font-body text-sm text-muted-foreground">Training, deal structuring, market intelligence and more</p>
@@ -215,7 +215,7 @@ const VideoLibrary = () => {
 
       {/* Embed modal */}
       <Dialog open={!!embedVideo} onOpenChange={(open) => !open && setEmbedVideo(null)}>
-        <DialogContent className="bg-card border-border text-foreground max-w-3xl p-0 overflow-hidden">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto sm:max-w-3xl p-0 overflow-hidden">
           {embedVideo && (
             <>
               <div className="relative aspect-video bg-black">
@@ -250,7 +250,7 @@ const VideoLibrary = () => {
 
       {/* Add / Edit form */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display">{editVideo ? "Edit Video" : "Add Video"}</DialogTitle>
           </DialogHeader>

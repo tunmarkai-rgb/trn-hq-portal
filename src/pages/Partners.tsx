@@ -171,7 +171,7 @@ const Partners = () => {
 
       {/* Partner detail dialog */}
       <Dialog open={!!selectedPartner} onOpenChange={(open) => !open && setSelectedPartner(null)}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader><DialogTitle className="font-display">{selectedPartner?.name}</DialogTitle></DialogHeader>
           {selectedPartner && (
             <div className="space-y-4">
@@ -185,7 +185,7 @@ const Partners = () => {
 
       {/* Intro request dialog */}
       <Dialog open={introOpen} onOpenChange={setIntroOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader><DialogTitle className="font-display">Request Introduction</DialogTitle></DialogHeader>
           {introPartner && (
             <div className="space-y-4">

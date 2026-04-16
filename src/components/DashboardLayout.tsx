@@ -187,15 +187,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Main */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <header className="h-14 border-b border-border flex items-center px-4 sm:px-6 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
-          <button onClick={() => setSidebarOpen(true)} className="md:hidden text-muted-foreground mr-4">
+        <header className="min-h-14 border-b border-border flex items-center px-4 sm:px-6 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden text-muted-foreground mr-4 shrink-0">
             <Menu className="w-5 h-5" />
           </button>
-          <div className="flex flex-col">
-            <h1 className="font-display text-sm font-semibold text-foreground leading-tight">{pageTitle}</h1>
+          <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+            <h1 className="font-display text-sm font-semibold text-foreground leading-tight truncate">{pageTitle}</h1>
             {firstName && (
-              <p className="font-body text-[10px] text-muted-foreground leading-tight">
-                {greeting}, {firstName} · {format(new Date(), "EEEE, d MMMM")}
+              <p className="font-body text-[10px] text-muted-foreground leading-tight truncate">
+                {greeting}, {firstName}<span className="hidden sm:inline"> · {format(new Date(), "EEEE, d MMMM")}</span>
               </p>
             )}
           </div>

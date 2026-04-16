@@ -111,7 +111,7 @@ const SOPLibrary = () => {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">SOP Library</h2>
           <p className="font-body text-sm text-muted-foreground">Standard operating procedures — admin only</p>
@@ -190,7 +190,7 @@ const SOPLibrary = () => {
 
       {/* Add / Edit form */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-card border-border text-foreground max-h-[90vh] overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display">{editSop ? "Edit SOP" : "Add SOP"}</DialogTitle>
           </DialogHeader>

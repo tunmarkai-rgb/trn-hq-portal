@@ -103,7 +103,7 @@ const EducationHub = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Education Hub</h2>
           <p className="font-body text-sm text-muted-foreground">Market reports, legal guides, scripts and resources</p>
@@ -196,7 +196,7 @@ const EducationHub = () => {
 
       {/* Add / Edit form */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display">{editResource ? "Edit Resource" : "Add Resource"}</DialogTitle>
           </DialogHeader>

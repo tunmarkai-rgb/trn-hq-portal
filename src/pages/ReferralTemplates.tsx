@@ -109,7 +109,7 @@ const ReferralTemplates = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Referral Templates</h2>
           <p className="font-body text-sm text-muted-foreground">Contracts, agreements and scripts — ready to download</p>
@@ -200,7 +200,7 @@ const ReferralTemplates = () => {
 
       {/* Add / Edit form */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display">{editTemplate ? "Edit Template" : "Add Template"}</DialogTitle>
           </DialogHeader>

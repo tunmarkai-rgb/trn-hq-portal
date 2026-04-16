@@ -195,7 +195,7 @@ const MemberProfile = () => {
 
       {/* Introduction Dialog */}
       <Dialog open={introOpen} onOpenChange={setIntroOpen}>
-        <DialogContent className="bg-card border-border text-foreground">
+        <DialogContent className="bg-card border-border text-foreground w-[calc(100vw-2rem)] sm:w-auto max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display">Request Introduction</DialogTitle>
           </DialogHeader>
